@@ -13,7 +13,7 @@
 |------|-------------|
 | `sonicwall-cc-tokens.json` | W3C design tokens — colors, type, spacing, radius, shadows, and 25 component groups |
 | `sonicwall-cc-theme.css` | CSS custom properties (token layer rebased to NSM) + component styles |
-| `storybook.html` | Live token + component gallery with per-component token maps |
+| `index.html` | Live token + component gallery with per-component token maps |
 | `component-token-map.md` | Text hand-off spec for developers |
 
 ---

@@ -2,7 +2,7 @@
 
 **Source of truth:** `sonicwall-cc-tokens.json` v2.0.0
 **Implementation layer:** `sonicwall-cc-theme.css` (CSS custom properties)
-**Visual reference:** `storybook.html` (live render of every row below)
+**Visual reference:** `index.html` (live render of every row below)
 
 > Lean-token collapses: warning-yellow → `--accent`, link/info-blue → `--accent`.
 

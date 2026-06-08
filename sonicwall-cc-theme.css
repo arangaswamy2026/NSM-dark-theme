@@ -51,7 +51,7 @@
    .react-bs-table, .switch-sonicwall, …); they consume these variables but
    some carry hardcoded non-token values pending an NSM-specific rework.
    The canonical, NSM-aligned definitions live in sonicwall-cc-tokens.json
-   and storybook.html. */
+   and index.html. */
 :root {
   /* Surfaces (NSM neutral greys) */
   --surface-l0:       #282828;
