@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<!--
+  SonicWall NSM — Dark Theme  ·  Token & Component Storybook  ·  v2.0.0
+  Source of truth: sonicwall-cc-tokens v2.0.0
+  Rebased onto the NSM (Network Security Manager) palette. NSM's extra
+  accent/status distinctions are collapsed onto existing tokens
+  (warning-yellow → accent, link/info-blue → accent) per hand-off agreement.
+  Design reference: index.html (NSM design system) — colors/hierarchy authoritative.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SonicWall NSM — Dark Theme Storybook</title>
+<style>
+  :root {
+    /* Surfaces (NSM neutral greys) */
+    --surface-l0:#282828; --surface-l1:#333333; --surface-l2:#333333;
+    --surface-l3:#434343; --surface-hover:#515151; --surface-sink:#282828;
+    /* Borders */
+    --border:#515151; --border-subtle:#65656a;
+    /* Text */
+    --text-primary:#ffffff; --text-secondary:#cccccc; --text-muted:#868686;
+    --text-table-header:#cccccc; --text-sidebar:#cccccc; --text-on-accent:#ffffff; --text-inverse:#333333;
+    /* Accent */
+    --accent:#ff791a; --accent-secondary:#fda348; --accent-hover:#e6640a;
+    --accent-subtle:rgba(255,121,26,0.07); --accent-ring:rgba(255,121,26,0.2);
+    /* Semantic (yellow & blue collapsed to accent) */
+    --sev-critical:#cc0000; --sev-warning:#ff791a; --sev-mitigated:#99cc00;
+    --sev-not-mitigated:#cc0000; --sev-benign:#868686;
+    /* Type — system stack */
+    --font-base:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-semi:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-bold:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-light:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-display:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-mono:'SF Mono','Fira Code',monospace;
+    --fs-xs:11px; --fs-sm:12px; --fs-base:13px; --fs-md:14px; --fs-lg:16px;
+    --fs-xl:18px; --fs-2xl:20px; --fs-3xl:28px;
+    --lh-tight:1.1; --lh-snug:1.2; --lh-normal:1.4; --lh-relaxed:1.5; --lh-loose:1.6;
+    --fw-regular:400; --fw-semibold:600; --fw-bold:700;
+    --r-badge:2px; --r-input:3px; --r-card:5px; --r-pill:50%;
+    --shadow-overlay:0 4px 16px rgba(0,0,0,0.4); --shadow-tooltip:0 2px 8px rgba(0,0,0,0.35);
+  }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; }
+  body {
+    background:#1e1e1e; color:var(--text-secondary);
+    font-family:var(--font-base); font-size:var(--fs-base); line-height:var(--lh-normal);
+    -webkit-font-smoothing:antialiased;
+  }
+  .sb-shell { display:grid; grid-template-columns:260px 1fr; min-height:100vh; }
+  .sb-nav {
+    position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    background:var(--surface-l1); border-right:1px solid var(--border); padding:20px 0;
+  }
+  .sb-nav .brand { padding:0 20px 16px; border-bottom:1px solid var(--border); margin-bottom:12px; }
+  .sb-nav .brand .logo { width:10px;height:10px;border-radius:2px;background:var(--accent);display:inline-block;margin-right:8px; }
+  .sb-nav .brand .name { font-family:var(--font-bold); font-weight:700; font-size:var(--fs-md); color:var(--text-primary); }
+  .sb-nav .brand .ver { display:block; font-size:var(--fs-xs); color:var(--text-muted); margin-top:4px; }
+  .sb-nav .group { font-family:var(--font-semi); font-weight:600; font-size:var(--fs-xs); text-transform:uppercase; color:var(--text-muted); padding:14px 20px 6px; letter-spacing:.3px; }
+  .sb-nav a { display:block; padding:6px 20px; color:var(--text-sidebar); font-size:var(--fs-base); text-decoration:none; border-left:2px solid transparent; }
+  .sb-nav a:hover { color:var(--text-primary); background:var(--surface-hover); }
+  .sb-main { padding:40px 48px 120px; max-width:1100px; }
+  .sb-hero h1 { font-family:var(--font-display); font-size:var(--fs-3xl); font-weight:700; color:var(--text-primary); line-height:var(--lh-snug); margin:0 0 8px; }
+  .sb-hero p { font-size:var(--fs-md); max-width:700px; line-height:var(--lh-loose); }
+  .sb-callout { background:var(--surface-l1); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:var(--r-card); padding:14px 16px; font-size:var(--fs-sm); line-height:var(--lh-loose); margin-top:16px; }
+  .sb-section { margin-top:56px; scroll-margin-top:24px; }
+  .sb-section > h2 { font-family:var(--font-bold); font-weight:700; font-size:var(--fs-2xl); color:var(--text-primary); margin:0 0 4px; }
+  .sb-section > .sub { color:var(--text-muted); font-size:var(--fs-sm); margin-bottom:18px; }
+  .sb-rule { height:1px; background:var(--accent); border:0; opacity:1; margin:0 0 22px; width:48px; }
+  .sb-component { margin-top:34px; }
+  .sb-component h3 { font-family:var(--font-bold); font-weight:700; font-size:var(--fs-xl); color:var(--text-primary); margin:0 0 2px; }
+  .sb-component .tag { font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted); }
+  .sb-canvas { background:var(--surface-l0); border:1px solid var(--border); border-radius:var(--r-card); padding:28px; margin:14px 0; display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start; }
+  .sb-canvas.col { flex-direction:column; }
+  table.map { width:100%; border-collapse:collapse; font-size:var(--fs-sm); margin-top:8px; }
+  table.map th { background:var(--surface-l1); color:var(--text-table-header); font-family:var(--font-semi); font-weight:600; font-size:var(--fs-sm); text-align:left; padding:.55rem .7rem; border:1px solid var(--border); }
+  table.map td { padding:.55rem .7rem; border:1px solid var(--border); color:var(--text-secondary); vertical-align:top; }
+  table.map td.tok, table.map td.cls { font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-primary); white-space:nowrap; }
+  table.map td.cls { color:var(--accent); }
+  .swatch-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+  .swatch { background:var(--surface-l2); border:1px solid var(--border); border-radius:var(--r-card); overflow:hidden; }
+  .swatch .chip { height:64px; }
+  .swatch .meta { padding:10px 12px; }
+  .swatch .meta .nm { font-family:var(--font-semi); font-weight:600; font-size:var(--fs-base); color:var(--text-primary); }
+  .swatch .meta .cls { font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--accent); display:block; margin:3px 0; }
+  .swatch .meta .hex { font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted); }
+  .swatch .meta .use { font-size:var(--fs-sm); color:var(--text-secondary); margin-top:6px; line-height:var(--lh-normal); }
+  .type-row { display:flex; align-items:baseline; gap:20px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .type-row .spec { flex:1; color:var(--text-primary); }
+  .type-row .meta { font-family:var(--font-mono); font-size:var(--fs-sm); color:var(--text-muted); width:300px; }
+  .type-row .meta b { color:var(--accent); font-weight:400; }
+  table.inv { width:100%; border-collapse:collapse; font-size:var(--fs-sm); }
+  table.inv th { background:var(--surface-l1); color:var(--text-table-header); font-family:var(--font-semi); font-weight:600; text-align:left; padding:.6rem .7rem; border:1px solid var(--border); font-size:var(--fs-sm); }
+  table.inv td { padding:.55rem .7rem; border:1px solid var(--border); color:var(--text-secondary); }
+  table.inv td.cmp { font-family:var(--font-semi); font-weight:600; color:var(--text-primary); }
+  .badge { display:inline-block; font-family:var(--font-semi); font-weight:600; font-size:var(--fs-xs); text-transform:uppercase; padding:2px 8px; border-radius:var(--r-badge); }
+  .badge.ok { color:var(--sev-mitigated); border:1px solid var(--sev-mitigated); }
+  .badge.new { color:var(--accent); border:1px solid var(--accent); }
+  .note { background:var(--surface-l1); border:1px solid var(--border); border-left:2px solid var(--accent); border-radius:var(--r-card); padding:14px 16px; font-size:var(--fs-sm); line-height:var(--lh-loose); margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="sb-shell">
+  <nav class="sb-nav">
+    <div class="brand">
+      <span class="logo"></span><span class="name">NSM</span>
+      <span class="ver">Dark Theme · Storybook · v2.0.0</span>
+    </div>
+    <div class="group">Foundations</div>
+    <a href="#colors">Color tokens</a>
+    <a href="#typography">Typography</a>
+    <a href="#spacing">Spacing &amp; layout</a>
+    <a href="#radius">Radius &amp; border</a>
+    <div class="group">Chrome</div>
+    <a href="#topbar">Top header bar</a>
+    <a href="#sidebar">Sidebar nav</a>
+    <a href="#breadcrumb">Breadcrumb</a>
+    <div class="group">Actions &amp; forms</div>
+    <a href="#buttons">Buttons</a>
+    <a href="#iconbutton">Icon button</a>
+    <a href="#forminput">Input</a>
+    <a href="#select">Select</a>
+    <a href="#checkbox">Checkbox</a>
+    <a href="#radio">Radio</a>
+    <a href="#slider">Slider</a>
+    <div class="group">Structure</div>
+    <a href="#tabs">Tabs</a>
+    <a href="#stepper">Steps / wizard</a>
+    <a href="#titlepane">Title pane</a>
+    <a href="#tree">Tree list</a>
+    <div class="group">Data &amp; status</div>
+    <a href="#table">Data table</a>
+    <a href="#countblock">Count block</a>
+    <a href="#statusflag">Status flag</a>
+    <a href="#leddot">LED dot</a>
+    <a href="#hastatus">HA status</a>
+    <a href="#avatar">Avatar &amp; badge</a>
+    <div class="group">Overlays</div>
+    <a href="#modal">Modal</a>
+    <a href="#tooltip">Tooltip</a>
+    <a href="#scrollbar">Scrollbar</a>
+    <div class="group">Reference</div>
+    <a href="#inventory">Component inventory</a>
+    <a href="#tailwind">Tailwind token map</a>
+  </nav>
+  <main class="sb-main">
+    <div class="sb-hero">
+      <h1>NSM Dark Theme Storybook</h1>
+      <p>Version 2.0.0 rebases the design system onto the <b>NSM (Network Security Manager)</b> palette and draws in the component definitions that were previously missing. Every token and component is rendered live and mapped to its Tailwind utility class for the dev team.</p>
+      <div class="sb-callout"><b>Collapse note.</b> To keep the token set lean, NSM's warning-yellow and link/info-blue were folded onto the orange accent. The <b>LED dot</b> and <b>status flag</b> below therefore show yellow/blue states as orange. Add <code>severity.warning-yellow</code> / <code>severity.info</code> tokens later if those distinctions are required.</div>
+    </div>
+
+    <!-- ════════ COLORS ════════ -->
+    <section class="sb-section" id="colors">
+      <h2>Color tokens</h2>
+      <div class="sub">color.* · NSM neutral baseline · mapped to Tailwind namespaces surface / border / content / accent / severity</div>
+      <hr class="sb-rule" />
+
+      <h3 style="font-family:var(--font-bold);font-weight:700;font-size:var(--fs-lg);color:var(--text-primary);margin:0 0 12px;">Surfaces</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#282828"></div><div class="meta"><span class="nm">L0 · Page</span><span class="cls">bg-surface-l0</span><span class="hex">#282828</span><span class="use">App canvas — darkest base.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#333333"></div><div class="meta"><span class="nm">L1 · Surface</span><span class="cls">bg-surface-l1</span><span class="hex">#333333</span><span class="use">Nav · header · panels · inputs · tables.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#333333"></div><div class="meta"><span class="nm">L2 · Card</span><span class="cls">bg-surface-l2</span><span class="hex">#333333</span><span class="use">Cards · tab groups · table body.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#434343"></div><div class="meta"><span class="nm">L3 · Raised</span><span class="cls">bg-surface-l3</span><span class="hex">#434343</span><span class="use">Zebra rows · selected items.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#515151"></div><div class="meta"><span class="nm">Hover</span><span class="cls">bg-surface-hover</span><span class="hex">#515151</span><span class="use">Hover / active / slider track.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#282828;border-bottom:1px solid #515151"></div><div class="meta"><span class="nm">Sink</span><span class="cls">bg-surface-sink</span><span class="hex">#282828</span><span class="use">Recessed (= app canvas).</span></div></div>
+      </div>
+
+      <h3 style="font-family:var(--font-bold);font-weight:700;font-size:var(--fs-lg);color:var(--text-primary);margin:26px 0 12px;">Borders</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#515151"></div><div class="meta"><span class="nm">Default</span><span class="cls">border-border</span><span class="hex">#515151</span><span class="use">Panel / table / divider borders.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#65656a"></div><div class="meta"><span class="nm">Subtle</span><span class="cls">border-border-subtle</span><span class="hex">#65656a</span><span class="use">Input · checkbox · radio borders.</span></div></div>
+      </div>
+
+      <h3 style="font-family:var(--font-bold);font-weight:700;font-size:var(--fs-lg);color:var(--text-primary);margin:26px 0 12px;">Text / foreground</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#ffffff"></div><div class="meta"><span class="nm">Primary</span><span class="cls">text-content-primary</span><span class="hex">#ffffff</span><span class="use">Headings, values, counts.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#cccccc"></div><div class="meta"><span class="nm">Secondary</span><span class="cls">text-content-secondary</span><span class="hex">#cccccc</span><span class="use">Body, nav, cells, labels, table headers.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#868686"></div><div class="meta"><span class="nm">Muted</span><span class="cls">text-content-muted</span><span class="hex">#868686</span><span class="use">Captions, placeholders, disabled.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#333333;border:1px solid #515151"></div><div class="meta"><span class="nm">Inverse</span><span class="cls">text-content-inverse</span><span class="hex">#333333</span><span class="use">Dark text on light status chips.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#ffffff"></div><div class="meta"><span class="nm">On accent</span><span class="cls">text-content-on-accent</span><span class="hex">#ffffff</span><span class="use">Text on orange / red backgrounds.</span></div></div>
+      </div>
+
+      <h3 style="font-family:var(--font-bold);font-weight:700;font-size:var(--fs-lg);color:var(--text-primary);margin:26px 0 12px;">Accent</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#ff791a"></div><div class="meta"><span class="nm">Default</span><span class="cls">bg-accent</span><span class="hex">#ff791a</span><span class="use">Icons, active, CTA, focus, links.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#fda348"></div><div class="meta"><span class="nm">Secondary</span><span class="cls">bg-accent-secondary</span><span class="hex">#fda348</span><span class="use">Secondary accent.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#e6640a"></div><div class="meta"><span class="nm">Hover</span><span class="cls">bg-accent-hover</span><span class="hex">#e6640a</span><span class="use">Primary button pressed/hover.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:rgba(255,121,26,0.2)"></div><div class="meta"><span class="nm">Focus ring</span><span class="cls">ring-accent-ring</span><span class="hex">rgba(255,121,26,.2)</span><span class="use">Input focus glow.</span></div></div>
+      </div>
+
+      <h3 style="font-family:var(--font-bold);font-weight:700;font-size:var(--fs-lg);color:var(--text-primary);margin:26px 0 12px;">Semantic / severity</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#cc0000"></div><div class="meta"><span class="nm">Critical / Danger</span><span class="cls">text-severity-critical</span><span class="hex">#cc0000</span><span class="use">Critical · error · offline.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#99cc00"></div><div class="meta"><span class="nm">Mitigated / Success</span><span class="cls">text-severity-mitigated</span><span class="hex">#99cc00</span><span class="use">Success · online · done.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#ff791a"></div><div class="meta"><span class="nm">Warning</span><span class="cls">text-severity-warning</span><span class="hex">#ff791a</span><span class="use">NSM yellow collapsed to accent.</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#868686"></div><div class="meta"><span class="nm">Benign</span><span class="cls">text-severity-benign</span><span class="hex">#868686</span><span class="use">Neutral · inactive (NSM info-blue collapsed).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ════════ TYPOGRAPHY ════════ -->
+    <section class="sb-section" id="typography">
+      <h2>Typography</h2>
+      <div class="sub">typography.* · system font stack (NSM baseline)</div>
+      <hr class="sb-rule" />
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-3xl);font-weight:700">Dashboard Title</div><div class="meta"><b>text-3xl</b> · 28px / 700</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-2xl);font-weight:600">Section Heading</div><div class="meta"><b>text-2xl</b> · 20px / 600</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-xl);font-weight:600">Panel Header</div><div class="meta"><b>text-xl</b> · 18px / 600</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-lg);font-weight:400">Large Body / Logo</div><div class="meta"><b>text-lg</b> · 16px / 400</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-md);font-weight:600;color:var(--accent)">App Name / Link</div><div class="meta"><b>text-md</b> · 14px / 600</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-base);font-weight:400">Default body, table cells, nav, inputs — 13px</div><div class="meta"><b>text-base</b> · 13px / 400</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-sm);font-weight:400;color:var(--text-secondary)">Secondary label, table header, tooltip — 12px</div><div class="meta"><b>text-sm</b> · 12px / 400</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-xs);font-weight:400;color:var(--text-muted)">Caption, badge, step label — 11px</div><div class="meta"><b>text-xs</b> · 11px / 400</div></div>
+      <div class="type-row"><div class="spec" style="font-size:var(--fs-base);font-weight:700;font-family:var(--font-mono);color:var(--accent)">10.65.21.85 — code / IP</div><div class="meta"><b>font-mono</b> · 13px / 700</div></div>
+      <div class="note"><b>Weights:</b> regular 400 · semibold 600 (NSM medium-500 collapses here) · bold 700. NSM light-200 collapses to regular.</div>
+    </section>
+
+    <!-- ════════ SPACING ════════ -->
+    <section class="sb-section" id="spacing">
+      <h2>Spacing &amp; layout</h2>
+      <div class="sub">spacing.* · NSM scale + layout dimensions</div>
+      <hr class="sb-rule" />
+      <table class="map">
+        <thead><tr><th>Token</th><th>Value</th><th>Tailwind class</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td class="tok">spacing.1</td><td>3px</td><td class="cls">p-1 / gap-1</td><td>Tight spacing</td></tr>
+          <tr><td class="tok">spacing.2</td><td>5px</td><td class="cls">p-2 / gap-2</td><td>Compact spacing</td></tr>
+          <tr><td class="tok">spacing.3</td><td>10px</td><td class="cls">p-3 / gap-3</td><td>Default spacing</td></tr>
+          <tr><td class="tok">spacing.4</td><td>20px</td><td class="cls">p-4 / gap-4</td><td>Section spacing</td></tr>
+          <tr><td class="tok">spacing.5</td><td>29px</td><td class="cls">h-5</td><td>Control height (button / input / avatar)</td></tr>
+          <tr><td class="tok">spacing.header-height</td><td>83px</td><td class="cls">h-header-h</td><td>Top header bar</td></tr>
+          <tr><td class="tok">spacing.sidebar-width</td><td>200px</td><td class="cls">w-sidebar-w</td><td>Left nav</td></tr>
+          <tr><td class="tok">spacing.table-cell-padding</td><td>7px 12px</td><td class="cls">py-[7px] px-3</td><td>Table cell padding</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ════════ RADIUS ════════ -->
+    <section class="sb-section" id="radius">
+      <h2>Radius &amp; border</h2>
+      <div class="sub">border.radius.* (NSM scale)</div>
+      <hr class="sb-rule" />
+      <div class="sb-canvas">
+        <div style="text-align:center"><div style="width:90px;height:48px;background:var(--surface-hover);border-radius:2px"></div><div style="font-size:var(--fs-sm);margin-top:8px;color:var(--text-muted)"><span style="color:var(--accent);font-family:var(--font-mono)">rounded-badge</span><br>2px · status flags</div></div>
+        <div style="text-align:center"><div style="width:90px;height:48px;background:var(--surface-hover);border-radius:3px"></div><div style="font-size:var(--fs-sm);margin-top:8px;color:var(--text-muted)"><span style="color:var(--accent);font-family:var(--font-mono)">rounded-input</span><br>3px · buttons, inputs</div></div>
+        <div style="text-align:center"><div style="width:90px;height:48px;background:var(--surface-hover);border-radius:5px"></div><div style="font-size:var(--fs-sm);margin-top:8px;color:var(--text-muted)"><span style="color:var(--accent);font-family:var(--font-mono)">rounded-card</span><br>5px · panels, modals</div></div>
+        <div style="text-align:center"><div style="width:48px;height:48px;background:var(--surface-hover);border-radius:50%"></div><div style="font-size:var(--fs-sm);margin-top:8px;color:var(--text-muted)"><span style="color:var(--accent);font-family:var(--font-mono)">rounded-pill</span><br>50% · dots, avatars</div></div>
+      </div>
+    </section>
+
+    <!-- ════════ CHROME ════════ -->
+    <section class="sb-section" id="topbar">
+      <h2>Chrome</h2>
+      <div class="sub">component.topbar / sidebar / breadcrumb</div>
+      <hr class="sb-rule" />
+
+      <div class="sb-component">
+        <h3>Top header bar</h3><span class="tag">component.topbar</span>
+        <div class="sb-canvas" style="display:block;padding:14px">
+          <div style="background:var(--surface-l1);border-radius:var(--r-card);padding:0 16px;height:83px;display:flex;align-items:center;gap:12px">
+            <span style="font-size:var(--fs-md);font-weight:600;color:var(--accent)">Manager View</span>
+            <span style="width:1px;height:20px;background:var(--border)"></span>
+            <span style="color:var(--text-primary);border-bottom:2px solid var(--accent);padding:6px 4px">Home</span>
+            <span style="color:var(--text-muted);padding:6px 4px">Monitor</span>
+            <span style="color:var(--text-muted);padding:6px 4px">System</span>
+            <span style="margin-left:auto;color:var(--text-muted);font-size:var(--fs-sm)">Controller</span>
+            <button style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-input);height:29px;padding:0 12px;cursor:pointer">✓ Commit &amp; Deploy</button>
+            <span style="width:29px;height:29px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--fs-sm)">NA</span>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background</td><td class="tok">surface.l1-chrome</td><td>#333333</td><td class="cls">bg-surface-l1</td></tr>
+          <tr><td>Height / radius</td><td class="tok">spacing.header-height · radius.card</td><td>83px · 5px</td><td class="cls">h-header-h rounded-card</td></tr>
+          <tr><td>App name</td><td class="tok">accent.default · fontSize.md</td><td>#ff791a · 14px</td><td class="cls">text-accent text-md</td></tr>
+          <tr><td>Divider</td><td class="tok">border.default</td><td>#515151</td><td class="cls">bg-border</td></tr>
+          <tr><td>Nav item / active</td><td class="tok">text.muted / text.primary</td><td>#868686 / #fff</td><td class="cls">text-content-muted / text-content-primary</td></tr>
+          <tr><td>Active underline</td><td class="tok">accent.default 2px</td><td>#ff791a</td><td class="cls">border-b-2 border-accent</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="sidebar">
+        <h3>Sidebar nav</h3><span class="tag">component.sidebar</span>
+        <div class="sb-canvas" style="padding:14px">
+          <nav style="width:200px;background:var(--surface-l1);border-radius:var(--r-card);padding:12px 0">
+            <div style="padding:8px 14px 16px;border-bottom:1px solid var(--border);margin-bottom:8px"><div style="font-size:var(--fs-lg);font-weight:700;color:var(--text-primary);letter-spacing:.5px">NSM</div><div style="font-size:var(--fs-xs);color:var(--text-muted)">Network Security Manager</div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 14px;color:var(--text-primary);background:var(--surface-l3);position:relative"><span style="position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--accent);border-radius:0 2px 2px 0"></span><span style="color:var(--accent)">◉</span> Dashboard</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 14px;color:var(--text-sidebar)"><span style="color:var(--accent)">◉</span> Firewalls</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 14px 7px 36px;color:var(--text-sidebar);font-size:var(--fs-sm)"><span style="color:var(--text-muted)">—</span> Inventory</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:7px 14px;color:var(--text-sidebar)"><span style="color:var(--accent)">◉</span> Reports</div>
+          </nav>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background / width</td><td class="tok">surface.l1-chrome · spacing.sidebar-width</td><td>#333333 · 200px</td><td class="cls">bg-surface-l1 w-sidebar-w</td></tr>
+          <tr><td>Nav item / hover</td><td class="tok">text.sidebar-label / sidebar-active</td><td>#cccccc / #fff</td><td class="cls">text-content-sidebar / hover:text-content-sidebar-active</td></tr>
+          <tr><td>Hover / active bg</td><td class="tok">surface.l3-hover / l3-raised</td><td>#515151 / #434343</td><td class="cls">hover:bg-surface-hover · bg-surface-l3</td></tr>
+          <tr><td>Item icon</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">text-accent</td></tr>
+          <tr><td>Selected marker</td><td class="tok">accent.default 3px</td><td>#ff791a</td><td class="cls">border-l-[3px] border-accent</td></tr>
+          <tr><td>Level-1 item</td><td class="tok">fontSize.sm</td><td>12px, indented</td><td class="cls">text-sm pl-9</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="breadcrumb">
+        <h3>Breadcrumb</h3><span class="tag">component.breadcrumb</span>
+        <div class="sb-canvas">
+          <div style="display:flex;align-items:center;gap:4px;background:var(--surface-l1);padding:8px 14px;border-radius:var(--r-input);font-size:var(--fs-base)">
+            <span style="color:var(--accent);cursor:pointer">Global Default Tenant</span>
+            <span style="color:var(--text-muted);margin:0 2px">/</span><span>Home</span>
+            <span style="color:var(--text-muted);margin:0 2px">/</span><span>Dashboard</span>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background</td><td class="tok">surface.l1-chrome</td><td>#333333</td><td class="cls">bg-surface-l1</td></tr>
+          <tr><td>Text / slash</td><td class="tok">text.secondary / text.muted</td><td>#cccccc / #868686</td><td class="cls">text-content-secondary / text-content-muted</td></tr>
+          <tr><td>Clickable crumb</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">text-accent hover:underline</td></tr>
+        </tbody></table>
+        <div class="note">NSM renders clickable crumbs in <b>link-blue</b>; per the collapse agreement they use the orange accent here.</div>
+      </div>
+    </section>
+
+    <!-- ════════ ACTIONS & FORMS ════════ -->
+    <section class="sb-section" id="buttons">
+      <h2>Actions &amp; forms</h2>
+      <div class="sub">component.buttonPrimary / buttonSecondary / iconButton / formInput / select / checkbox / radio / slider</div>
+      <hr class="sb-rule" />
+
+      <div class="sb-component">
+        <h3>Buttons</h3><span class="tag">component.buttonPrimary · buttonSecondary</span>
+        <div class="sb-canvas">
+          <button style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-input);height:29px;padding:0 16px;font-family:var(--font-base);font-size:var(--fs-base);cursor:pointer">✓ Commit &amp; Deploy</button>
+          <button style="background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--r-input);height:29px;padding:0 16px;font-family:var(--font-base);font-size:var(--fs-base);cursor:pointer">Cancel</button>
+          <button style="background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--r-input);height:29px;padding:0 16px;font-size:var(--fs-base);cursor:not-allowed;opacity:.4">Disabled</button>
+        </div>
+        <table class="map"><thead><tr><th>Variant · Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Primary · bg / hover</td><td class="tok">accent.default / accent.hover</td><td>#ff791a / #e6640a</td><td class="cls">bg-accent hover:bg-accent-hover</td></tr>
+          <tr><td>Primary · text</td><td class="tok">text.on-accent</td><td>#ffffff</td><td class="cls">text-content-on-accent</td></tr>
+          <tr><td>Secondary · bg / border</td><td class="tok">transparent / border.default</td><td>— / #515151</td><td class="cls">bg-transparent border border-border</td></tr>
+          <tr><td>Secondary · text</td><td class="tok">text.secondary</td><td>#cccccc</td><td class="cls">text-content-secondary</td></tr>
+          <tr><td>Radius / height</td><td class="tok">radius.input · spacing.5</td><td>3px · 29px</td><td class="cls">rounded-input h-5</td></tr>
+        </tbody></table>
+        <div class="note">NSM buttons use the <b>3px input radius</b> — they are not pill-shaped (a change from Capture Client v1.x).</div>
+      </div>
+
+      <div class="sb-component" id="iconbutton">
+        <h3>Icon button</h3><span class="tag">component.iconButton</span>
+        <div class="sb-canvas">
+          <span style="height:29px;min-width:29px;padding:0 8px;border-radius:var(--r-input);background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:6px">✓ Primary</span>
+          <span style="height:29px;min-width:29px;border-radius:var(--r-input);color:var(--accent);display:inline-flex;align-items:center;justify-content:center">⚡</span>
+          <span style="height:29px;min-width:29px;border-radius:var(--r-input);background:var(--surface-hover);color:var(--text-primary);display:inline-flex;align-items:center;justify-content:center">🔍</span>
+          <span style="height:29px;min-width:29px;border-radius:var(--r-input);color:var(--text-secondary);display:inline-flex;align-items:center;justify-content:center">↻</span>
+        </div>
+        <table class="map"><thead><tr><th>Variant · Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Default bg / hover</td><td class="tok">transparent / surface.l3-hover</td><td>— / #515151</td><td class="cls">bg-transparent hover:bg-surface-hover</td></tr>
+          <tr><td>Default icon / hover</td><td class="tok">text.secondary / text.primary</td><td>#cccccc / #fff</td><td class="cls">text-content-secondary / hover:text-content-primary</td></tr>
+          <tr><td>Primary variant</td><td class="tok">accent.default / text.on-accent</td><td>#ff791a / #fff</td><td class="cls">bg-accent text-content-on-accent</td></tr>
+          <tr><td>Accent variant</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">text-accent</td></tr>
+          <tr><td>Min-width / height</td><td class="tok">29px · spacing.5</td><td>29px</td><td class="cls">min-w-[29px] h-5</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="forminput">
+        <h3>Input</h3><span class="tag">component.formInput</span>
+        <div class="sb-canvas col" style="max-width:360px">
+          <input placeholder="Search for tenant/group/device…" style="width:100%;height:30px;background:var(--surface-l2);border:1px solid var(--border);color:var(--text-primary);font-family:var(--font-base);font-size:var(--fs-base);border-radius:var(--r-input);padding:6px 10px" />
+          <input value="Focused" style="width:100%;height:30px;background:var(--surface-l2);border:1px solid var(--accent);box-shadow:0 0 0 2px var(--accent-ring);color:var(--text-primary);font-size:var(--fs-base);border-radius:var(--r-input);padding:6px 10px" />
+          <input disabled value="read-only value" style="width:100%;height:30px;background:var(--surface-l2);border:1px solid var(--border);color:var(--text-primary);font-size:var(--fs-base);border-radius:var(--r-input);padding:6px 10px;opacity:.5" />
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background</td><td class="tok">surface.l2-card</td><td>#333333</td><td class="cls">bg-surface-l2</td></tr>
+          <tr><td>Border</td><td class="tok">border.default</td><td>#515151</td><td class="cls">border border-border</td></tr>
+          <tr><td>Text / placeholder</td><td class="tok">text.primary / text.muted</td><td>#fff / #868686</td><td class="cls">text-content-primary placeholder:text-content-muted</td></tr>
+          <tr><td>Focus</td><td class="tok">accent.default + focus-ring</td><td>#ff791a</td><td class="cls">focus:border-accent focus:shadow-focus-accent</td></tr>
+          <tr><td>Height / radius</td><td class="tok">30px · radius.input</td><td>30px · 3px</td><td class="cls">h-[30px] rounded-input</td></tr>
+          <tr><td>Label</td><td class="tok">text.secondary · fontSize.sm</td><td>#cccccc · 12px</td><td class="cls">text-content-secondary text-sm</td></tr>
+        </tbody></table>
+        <div class="note">NSM focuses inputs in <b>link-blue</b>; collapsed to the orange accent here.</div>
+      </div>
+
+      <div class="sb-component" id="select">
+        <h3>Select</h3><span class="tag">component.select</span>
+        <div class="sb-canvas">
+          <select style="height:30px;background:var(--surface-l2);border:1px solid var(--border);color:var(--text-primary);font-family:var(--font-base);font-size:var(--fs-base);border-radius:var(--r-input);padding:6px 28px 6px 10px;appearance:none;cursor:pointer">
+            <option>Global Default Tenant</option><option>Tenant A</option>
+          </select>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background / border</td><td class="tok">surface.l2-card / border.default</td><td>#333333 / #515151</td><td class="cls">bg-surface-l2 border border-border</td></tr>
+          <tr><td>Text / chevron</td><td class="tok">text.primary / text.muted</td><td>#fff / #868686</td><td class="cls">text-content-primary</td></tr>
+          <tr><td>Height / radius</td><td class="tok">30px · radius.input</td><td>30px · 3px</td><td class="cls">h-[30px] rounded-input</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="checkbox">
+        <h3>Checkbox</h3><span class="tag">component.checkbox</span>
+        <div class="sb-canvas">
+          <label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:14px;height:14px;border-radius:2px;background:var(--surface-l2);border:1px solid var(--border-subtle);display:inline-block"></span>Unchecked</label>
+          <label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:14px;height:14px;border-radius:2px;background:var(--accent);border:1px solid var(--accent);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px">✓</span>Checked</label>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Box bg / border</td><td class="tok">surface.l2-card / border.subtle</td><td>#333333 / #65656a</td><td class="cls">bg-surface-l2 border-border-subtle</td></tr>
+          <tr><td>Checked</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">checked:bg-accent</td></tr>
+          <tr><td>Size / radius</td><td class="tok">14px · radius.badge</td><td>14px · 2px</td><td class="cls">size-[14px] rounded-badge</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="radio">
+        <h3>Radio <span class="badge new">New</span></h3><span class="tag">component.radio</span>
+        <div class="sb-canvas">
+          <label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:14px;height:14px;border-radius:50%;background:var(--surface-l2);border:1px solid var(--border-subtle);display:inline-block"></span>Option A</label>
+          <label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:14px;height:14px;border-radius:50%;background:var(--surface-l2);border:1px solid var(--border-subtle);display:inline-flex;align-items:center;justify-content:center"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span></span>Option B (selected)</label>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Circle bg / border</td><td class="tok">surface.l2-card / border.subtle</td><td>#333333 / #65656a</td><td class="cls">bg-surface-l2 border-border-subtle</td></tr>
+          <tr><td>Checked dot</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">bg-accent</td></tr>
+          <tr><td>Size / radius</td><td class="tok">14px · radius.pill</td><td>14px · 50%</td><td class="cls">size-[14px] rounded-pill</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="slider">
+        <h3>Slider <span class="badge new">New</span></h3><span class="tag">component.slider</span>
+        <div class="sb-canvas">
+          <div style="width:200px;height:4px;background:var(--surface-hover);border-radius:2px;position:relative;margin:10px 0">
+            <div style="height:100%;width:60%;background:var(--accent);border-radius:2px"></div>
+            <div style="width:14px;height:14px;border-radius:50%;background:var(--accent);position:absolute;top:-5px;left:60%;transform:translateX(-50%);box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Track</td><td class="tok">surface.l3-hover</td><td>#515151</td><td class="cls">bg-surface-hover</td></tr>
+          <tr><td>Fill / thumb</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">bg-accent</td></tr>
+          <tr><td>Thumb shadow</td><td class="tok">slider.thumbShadow</td><td>0 1px 4px rgba(0,0,0,.4)</td><td class="cls">shadow</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- ════════ STRUCTURE ════════ -->
+    <section class="sb-section" id="tabs">
+      <h2>Structure</h2>
+      <div class="sub">component.tabs / stepper / titlePane / treeItem</div>
+      <hr class="sb-rule" />
+
+      <div class="sb-component">
+        <h3>Tabs</h3><span class="tag">component.tabs</span>
+        <div class="sb-canvas" style="display:block;padding:14px">
+          <div style="background:var(--surface-l1);border-radius:var(--r-card);overflow:hidden;width:500px">
+            <div style="display:flex;border-bottom:1px solid var(--border);padding:0 12px">
+              <span style="padding:10px 16px;color:var(--text-primary);border-bottom:2px solid var(--accent);font-weight:600;margin-bottom:-1px">Devices</span>
+              <span style="padding:10px 16px;color:var(--text-muted)">Summary</span>
+              <span style="padding:10px 16px;color:var(--text-muted)">Network</span>
+              <span style="padding:10px 16px;color:var(--text-muted)">Threat</span>
+            </div>
+            <div style="padding:16px;color:var(--text-muted)">Tab content area</div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Group bg / radius</td><td class="tok">surface.l1-chrome · radius.card</td><td>#333333 · 5px</td><td class="cls">bg-surface-l1 rounded-card</td></tr>
+          <tr><td>Nav border</td><td class="tok">border.default</td><td>#515151</td><td class="cls">border-b border-border</td></tr>
+          <tr><td>Tab / hover / active</td><td class="tok">text.muted / text.primary / text.primary</td><td>#868686 / #fff</td><td class="cls">text-content-muted hover:text-content-primary</td></tr>
+          <tr><td>Active border / weight</td><td class="tok">accent.default 2px · semibold</td><td>#ff791a · 600</td><td class="cls">border-b-2 border-accent font-semibold</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="stepper">
+        <h3>Steps / wizard <span class="badge new">+ done state</span></h3><span class="tag">component.stepper</span>
+        <div class="sb-canvas" style="display:block">
+          <div style="display:flex;width:440px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative">
+              <span style="width:28px;height:28px;border-radius:50%;background:var(--sev-mitigated);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;z-index:1">✓</span>
+              <span style="position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--border)"></span>
+              <span style="font-size:var(--fs-xs);color:var(--text-secondary);margin-top:6px">Upload</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative">
+              <span style="width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;z-index:1">2</span>
+              <span style="position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--border)"></span>
+              <span style="font-size:var(--fs-xs);color:var(--text-secondary);margin-top:6px">Configure</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative">
+              <span style="width:28px;height:28px;border-radius:50%;background:var(--surface-hover);border:2px solid var(--border);color:var(--text-muted);display:inline-flex;align-items:center;justify-content:center;font-weight:700;z-index:1">3</span>
+              <span style="font-size:var(--fs-xs);color:var(--text-muted);margin-top:6px">Review</span>
+            </div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>State · Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Done · bg</td><td class="tok">semantic.mitigated</td><td>#99cc00</td><td class="cls">bg-severity-mitigated</td></tr>
+          <tr><td>Active · bg / text</td><td class="tok">accent.default / text.on-accent</td><td>#ff791a / #fff</td><td class="cls">bg-accent text-content-on-accent</td></tr>
+          <tr><td>Inactive · bg / border</td><td class="tok">surface.l3-hover / border.default</td><td>#515151 / #515151</td><td class="cls">bg-surface-hover border-2 border-border</td></tr>
+          <tr><td>Connector</td><td class="tok">border.default</td><td>#515151</td><td class="cls">bg-border</td></tr>
+          <tr><td>Label / active</td><td class="tok">text.muted / text.secondary</td><td>#868686 / #cccccc</td><td class="cls">text-content-muted · text-xs</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="titlepane">
+        <h3>Title pane <span class="badge new">New</span></h3><span class="tag">component.titlePane</span>
+        <div class="sb-canvas" style="display:block">
+          <div style="width:400px;background:var(--surface-l1);border-radius:var(--r-card);overflow:hidden">
+            <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-weight:600;color:var(--text-primary)">Firewall Overview <span style="color:var(--text-secondary)">↻</span></div>
+            <div style="padding:16px;color:var(--text-secondary)">Panel body content with indent padding.</div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background / radius</td><td class="tok">surface.l1-chrome · radius.card</td><td>#333333 · 5px</td><td class="cls">bg-surface-l1 rounded-card</td></tr>
+          <tr><td>Header border</td><td class="tok">border.default</td><td>#515151</td><td class="cls">border-b border-border</td></tr>
+          <tr><td>Header text</td><td class="tok">text.primary · semibold · fontSize.base</td><td>#fff · 600 · 13px</td><td class="cls">text-content-primary font-semibold</td></tr>
+          <tr><td>Body text</td><td class="tok">text.secondary</td><td>#cccccc</td><td class="cls">text-content-secondary</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="tree">
+        <h3>Tree list <span class="badge new">New</span></h3><span class="tag">component.treeItem</span>
+        <div class="sb-canvas" style="display:block">
+          <div style="width:280px;background:var(--surface-l1);border-radius:var(--r-card);overflow:hidden">
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 10px;color:var(--text-secondary)">🌐 All Tenants</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 10px 5px 30px;background:var(--surface-l3);color:var(--text-primary)">🖧 Global Default Tenant</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 10px 5px 50px;color:var(--text-secondary)">🔥 Firewall 01</div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>State · Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Item / hover</td><td class="tok">text.secondary / text.primary</td><td>#cccccc / #fff</td><td class="cls">text-content-secondary hover:text-content-primary</td></tr>
+          <tr><td>Selected bg / text</td><td class="tok">surface.l3-raised / text.primary</td><td>#434343 / #fff</td><td class="cls">bg-surface-l3 text-content-primary</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- ════════ DATA & STATUS ════════ -->
+    <section class="sb-section" id="table">
+      <h2>Data &amp; status</h2>
+      <div class="sub">component.dataTable / countBlock / statusFlag / ledDot / haStatus / avatar / badge</div>
+      <hr class="sb-rule" />
+
+      <div class="sb-component">
+        <h3>Data table <span class="badge new">+ zebra</span></h3><span class="tag">component.dataTable</span>
+        <div class="sb-canvas" style="display:block;padding:0">
+          <table style="width:100%;border-collapse:collapse;font-family:var(--font-base);font-size:var(--fs-base)">
+            <thead><tr>
+              <th style="background:var(--surface-l1);color:var(--text-table-header);font-weight:600;font-size:var(--fs-sm);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)">Timestamp</th>
+              <th style="background:var(--surface-l1);color:var(--text-table-header);font-weight:600;font-size:var(--fs-sm);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)">Severity</th>
+              <th style="background:var(--surface-l1);color:var(--text-table-header);font-weight:600;font-size:var(--fs-sm);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)">Source IP</th>
+              <th style="background:var(--surface-l1);color:var(--text-table-header);font-weight:600;font-size:var(--fs-sm);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)">Message</th>
+            </tr></thead>
+            <tbody>
+              <tr style="background:var(--surface-l2);border-bottom:1px solid var(--border)"><td style="padding:7px 12px;color:var(--text-secondary)">2026-06-05T05:11Z</td><td style="padding:7px 12px"><span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:16px;height:16px;border-radius:2px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px">⚠</span>Notice</span></td><td style="padding:7px 12px;color:var(--text-secondary)">10.65.21.85</td><td style="padding:7px 12px;color:var(--text-secondary)">Admin logged in</td></tr>
+              <tr style="background:var(--surface-l3);border-bottom:1px solid var(--border)"><td style="padding:7px 12px;color:var(--text-secondary)">2026-06-05T06:42Z</td><td style="padding:7px 12px"><span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:16px;height:16px;border-radius:2px;background:var(--sev-not-mitigated);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px">✕</span>Critical</span></td><td style="padding:7px 12px;color:var(--text-secondary)">10.65.21.199</td><td style="padding:7px 12px;color:var(--text-secondary)">Policy violation</td></tr>
+              <tr style="background:var(--surface-l2)"><td style="padding:7px 12px;color:var(--text-secondary)">2026-06-07T16:37Z</td><td style="padding:7px 12px"><span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:16px;height:16px;border-radius:2px;background:var(--sev-mitigated);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px">i</span>Info</span></td><td style="padding:7px 12px;color:var(--text-secondary)">10.65.24.15</td><td style="padding:7px 12px;color:var(--text-secondary)">Sync complete</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Header bg / text</td><td class="tok">surface.l1-chrome / text.table-header</td><td>#333333 / #cccccc</td><td class="cls">bg-surface-l1 text-content-table-header</td></tr>
+          <tr><td>Row bg / zebra (even)</td><td class="tok">surface.l2-card / surface.l3-raised</td><td>#333333 / #434343</td><td class="cls">bg-surface-l2 even:bg-surface-l3</td></tr>
+          <tr><td>Row hover</td><td class="tok">surface.l3-hover</td><td>#515151</td><td class="cls">hover:bg-surface-hover</td></tr>
+          <tr><td>Row text / border</td><td class="tok">text.secondary / border.default</td><td>#cccccc / #515151</td><td class="cls">text-content-secondary border-b border-border</td></tr>
+          <tr><td>Cell padding</td><td class="tok">spacing.table-cell-padding</td><td>7px 12px</td><td class="cls">py-[7px] px-3</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="countblock">
+        <h3>Count block <span class="badge new">New</span></h3><span class="tag">component.countBlock</span>
+        <div class="sb-canvas">
+          <div style="display:inline-flex;align-items:center;background:var(--surface-l1);border-radius:var(--r-input);overflow:hidden">
+            <div style="padding:10px 12px;color:var(--accent);font-size:28px;display:flex;align-items:center">🔥</div>
+            <div style="width:1px;height:40px;background:linear-gradient(transparent,var(--accent),transparent)"></div>
+            <div style="padding:8px 14px"><div style="font-size:var(--fs-xs);color:var(--text-muted)">Firewalls</div><div style="font-size:22px;font-weight:700;color:var(--text-primary);line-height:1.1">12</div></div>
+          </div>
+          <div style="display:inline-flex;align-items:center;background:var(--surface-l1);border-radius:var(--r-input);overflow:hidden">
+            <div style="padding:10px 12px;color:var(--accent);font-size:28px;display:flex;align-items:center">👥</div>
+            <div style="width:1px;height:40px;background:linear-gradient(transparent,var(--accent),transparent)"></div>
+            <div style="padding:8px 14px"><div style="font-size:var(--fs-xs);color:var(--text-muted)">Groups</div><div style="font-size:22px;font-weight:700;color:var(--text-primary);line-height:1.1">5</div></div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background / hover</td><td class="tok">surface.l1-chrome / surface.l3-hover</td><td>#333333 / #515151</td><td class="cls">bg-surface-l1 hover:bg-surface-hover</td></tr>
+          <tr><td>Icon / divider</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">text-accent · gradient accent</td></tr>
+          <tr><td>Label</td><td class="tok">text.muted · fontSize.xs</td><td>#868686 · 11px</td><td class="cls">text-content-muted text-xs</td></tr>
+          <tr><td>Count</td><td class="tok">text.primary · 22px · bold</td><td>#fff · 700</td><td class="cls">text-content-primary font-bold</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="statusflag">
+        <h3>Status flag <span class="badge new">New</span></h3><span class="tag">component.statusFlag</span>
+        <div class="sb-canvas">
+          <span style="display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:20px;height:20px;border-radius:2px;background:var(--sev-not-mitigated);display:inline-flex;align-items:center;justify-content:center;color:#fff">✕</span>Critical</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:20px;height:20px;border-radius:2px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;color:#fff">!</span>Major</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:20px;height:20px;border-radius:2px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;color:#fff">⚠</span>Minor</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:20px;height:20px;border-radius:2px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;color:#fff">i</span>Info</span>
+        </div>
+        <table class="map"><thead><tr><th>Variant</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Critical</td><td class="tok">semantic.not-mitigated</td><td>#cc0000</td><td class="cls">bg-severity-not-mitigated</td></tr>
+          <tr><td>Major</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">bg-accent</td></tr>
+          <tr><td>Minor (was yellow)</td><td class="tok">semantic.warning → accent</td><td>#ff791a</td><td class="cls">bg-severity-warning</td></tr>
+          <tr><td>Info (was blue)</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">bg-accent</td></tr>
+        </tbody></table>
+        <div class="note">Minor (NSM yellow) and Info (NSM blue) collapse to the accent. Define <code>severity.warning-yellow</code> / <code>severity.info</code> to restore the distinction.</div>
+      </div>
+
+      <div class="sb-component" id="leddot">
+        <h3>LED dot <span class="badge new">New</span></h3><span class="tag">component.ledDot</span>
+        <div class="sb-canvas col">
+          <div style="display:flex;gap:18px;flex-wrap:wrap">
+            <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:12px;height:12px;border-radius:50%;background:var(--sev-mitigated)"></span>Online</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:12px;height:12px;border-radius:50%;background:var(--accent)"></span>Warning</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:12px;height:12px;border-radius:50%;background:var(--accent)"></span>Degraded</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:12px;height:12px;border-radius:50%;background:var(--sev-not-mitigated)"></span>Error</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:12px;height:12px;border-radius:50%;background:var(--accent)"></span>Info</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary)"><span style="width:12px;height:12px;border-radius:50%;background:var(--sev-benign)"></span>Inactive</span>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Variant</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Green (online)</td><td class="tok">semantic.mitigated</td><td>#99cc00</td><td class="cls">bg-severity-mitigated</td></tr>
+          <tr><td>Yellow / Orange (was distinct)</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">bg-accent</td></tr>
+          <tr><td>Red (error)</td><td class="tok">semantic.not-mitigated</td><td>#cc0000</td><td class="cls">bg-severity-not-mitigated</td></tr>
+          <tr><td>Blue (info, was distinct)</td><td class="tok">accent.default</td><td>#ff791a</td><td class="cls">bg-accent</td></tr>
+          <tr><td>Grey (inactive)</td><td class="tok">semantic.benign</td><td>#868686</td><td class="cls">bg-severity-benign</td></tr>
+        </tbody></table>
+        <div class="note">NSM's 6 distinct dot colors collapse to 4 here (yellow + orange + blue all render as accent). This is the agreed lean-token tradeoff.</div>
+      </div>
+
+      <div class="sb-component" id="hastatus">
+        <h3>HA status <span class="badge new">New</span></h3><span class="tag">component.haStatus</span>
+        <div class="sb-canvas">
+          <span style="display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:20px;height:20px;border-radius:50%;background:var(--sev-mitigated);color:var(--text-inverse);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px">P</span>Primary</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)"><span style="width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--text-inverse);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px">S</span>Secondary</span>
+        </div>
+        <table class="map"><thead><tr><th>Variant</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Primary bg</td><td class="tok">semantic.mitigated</td><td>#99cc00</td><td class="cls">bg-severity-mitigated</td></tr>
+          <tr><td>Secondary bg (was yellow)</td><td class="tok">semantic.warning → accent</td><td>#ff791a</td><td class="cls">bg-severity-warning</td></tr>
+          <tr><td>Text</td><td class="tok">text.inverse</td><td>#333333</td><td class="cls">text-content-inverse</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="avatar">
+        <h3>Avatar &amp; badge <span class="badge new">New</span></h3><span class="tag">component.avatar · badge</span>
+        <div class="sb-canvas">
+          <span style="width:29px;height:29px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--fs-sm)">NA</span>
+          <span style="position:relative;display:inline-flex"><span style="height:29px;min-width:29px;border-radius:var(--r-input);color:var(--text-secondary);display:inline-flex;align-items:center;justify-content:center;font-size:20px">🔔</span><span style="position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;background:var(--sev-not-mitigated);color:#fff;border-radius:8px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px">3</span></span>
+        </div>
+        <table class="map"><thead><tr><th>Component · Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Avatar · bg / text</td><td class="tok">accent.default / text.on-accent</td><td>#ff791a / #fff</td><td class="cls">bg-accent text-content-on-accent</td></tr>
+          <tr><td>Avatar · size / radius</td><td class="tok">spacing.5 · radius.pill</td><td>29px · 50%</td><td class="cls">size-5 rounded-pill</td></tr>
+          <tr><td>Badge · bg / text</td><td class="tok">semantic.not-mitigated / on-accent</td><td>#cc0000 / #fff</td><td class="cls">bg-severity-not-mitigated text-content-on-accent</td></tr>
+          <tr><td>Badge · font</td><td class="tok">10px · bold</td><td>10px / 700</td><td class="cls">text-[10px] font-bold</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- ════════ OVERLAYS ════════ -->
+    <section class="sb-section" id="modal">
+      <h2>Overlays</h2>
+      <div class="sub">component.modal / tooltip / scrollbar</div>
+      <hr class="sb-rule" />
+
+      <div class="sb-component">
+        <h3>Modal <span class="badge new">New</span></h3><span class="tag">component.modal</span>
+        <div class="sb-canvas" style="background:rgba(0,0,0,0.8)">
+          <div style="background:var(--surface-l1);border-radius:var(--r-card);width:420px;box-shadow:var(--shadow-overlay);overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:600;color:var(--text-primary)">Objects <span style="color:var(--text-muted);cursor:pointer">✕</span></div>
+            <div style="padding:20px 16px;color:var(--text-secondary);line-height:var(--lh-loose)">Modals use a raised surface with a drag header, scrim overlay, and optional footer actions.</div>
+            <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px">
+              <button style="background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--r-input);height:29px;padding:0 14px;cursor:pointer">Cancel</button>
+              <button style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-input);height:29px;padding:0 14px;cursor:pointer">Confirm</button>
+            </div>
+          </div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Surface / radius</td><td class="tok">surface.l1-chrome · radius.card</td><td>#333333 · 5px</td><td class="cls">bg-surface-l1 rounded-card</td></tr>
+          <tr><td>Shadow</td><td class="tok">shadow.overlay</td><td>0 4px 16px rgba(0,0,0,.4)</td><td class="cls">shadow-overlay</td></tr>
+          <tr><td>Scrim</td><td class="tok">modal.overlayScrim</td><td>rgba(0,0,0,.8)</td><td class="cls">bg-black/80</td></tr>
+          <tr><td>Header / footer border</td><td class="tok">border.default</td><td>#515151</td><td class="cls">border-border</td></tr>
+          <tr><td>Header text</td><td class="tok">text.primary · semibold · fontSize.md</td><td>#fff · 600 · 14px</td><td class="cls">text-content-primary font-semibold text-md</td></tr>
+          <tr><td>Body</td><td class="tok">text.secondary · lineHeight.loose</td><td>#cccccc · 1.6</td><td class="cls">text-content-secondary leading-loose</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="tooltip">
+        <h3>Tooltip <span class="badge new">New</span></h3><span class="tag">component.tooltip</span>
+        <div class="sb-canvas">
+          <span style="background:rgba(51,51,51,0.9);color:var(--text-primary);font-size:var(--fs-sm);padding:5px 10px;border-radius:var(--r-input);box-shadow:var(--shadow-tooltip);display:inline-block">Commit &amp; Deploy pending changes</span>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Background</td><td class="tok">tooltip.background</td><td>rgba(51,51,51,.9)</td><td class="cls">bg-surface-l1/90</td></tr>
+          <tr><td>Text / size</td><td class="tok">text.primary · fontSize.sm</td><td>#fff · 12px</td><td class="cls">text-content-primary text-sm</td></tr>
+          <tr><td>Radius / shadow</td><td class="tok">radius.input · shadow.tooltip</td><td>3px · 0 2px 8px</td><td class="cls">rounded-input shadow-tooltip</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class="sb-component" id="scrollbar">
+        <h3>Scrollbar <span class="badge new">New</span></h3><span class="tag">component.scrollbar</span>
+        <div class="sb-canvas">
+          <div style="position:relative;width:8px;height:80px;background:var(--surface-l1);border-radius:4px"><div style="position:absolute;width:8px;height:30px;top:10px;background:var(--border-subtle);border-radius:4px"></div></div>
+        </div>
+        <table class="map"><thead><tr><th>Property</th><th>Token</th><th>Value</th><th>Tailwind</th></tr></thead><tbody>
+          <tr><td>Track</td><td class="tok">surface.l1-chrome</td><td>#333333</td><td class="cls">bg-surface-l1</td></tr>
+          <tr><td>Thumb</td><td class="tok">border.subtle</td><td>#65656a</td><td class="cls">bg-border-subtle</td></tr>
+        </tbody></table>
+      </div>
+    </section>
+
+    <!-- ════════ INVENTORY ════════ -->
+    <section class="sb-section" id="inventory">
+      <h2>Component inventory</h2>
+      <div class="sub">25 defined component token groups · v2.0.0 NSM baseline</div>
+      <hr class="sb-rule" />
+      <table class="inv">
+        <thead><tr><th>Component</th><th>Token group</th><th>Status</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="cmp">Top header bar</td><td>component.topbar</td><td><span class="badge ok">Defined</span></td><td>NSM (revised)</td></tr>
+          <tr><td class="cmp">Sidebar nav</td><td>component.sidebar</td><td><span class="badge ok">Defined</span></td><td>NSM (revised)</td></tr>
+          <tr><td class="cmp">Breadcrumb</td><td>component.breadcrumb</td><td><span class="badge ok">Defined</span></td><td>NSM (revised)</td></tr>
+          <tr><td class="cmp">Primary / secondary button</td><td>component.buttonPrimary · buttonSecondary</td><td><span class="badge ok">Defined</span></td><td>NSM (revised — 3px radius)</td></tr>
+          <tr><td class="cmp">Icon button</td><td>component.iconButton</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Input</td><td>component.formInput</td><td><span class="badge ok">Defined</span></td><td>NSM (revised)</td></tr>
+          <tr><td class="cmp">Select</td><td>component.select</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Checkbox</td><td>component.checkbox</td><td><span class="badge ok">Defined</span></td><td>NSM (revised)</td></tr>
+          <tr><td class="cmp">Radio</td><td>component.radio</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Slider</td><td>component.slider</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Tabs</td><td>component.tabs</td><td><span class="badge ok">Defined</span></td><td>NSM (revised)</td></tr>
+          <tr><td class="cmp">Steps / wizard</td><td>component.stepper</td><td><span class="badge ok">Defined</span></td><td>NSM (+ done state)</td></tr>
+          <tr><td class="cmp">Title pane / panel</td><td>component.titlePane</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Tree list</td><td>component.treeItem</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Data table</td><td>component.dataTable</td><td><span class="badge ok">Defined</span></td><td>NSM (+ zebra)</td></tr>
+          <tr><td class="cmp">Count block (KPI)</td><td>component.countBlock</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Status flag</td><td>component.statusFlag</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">LED status dot</td><td>component.ledDot</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">HA status indicator</td><td>component.haStatus</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Avatar</td><td>component.avatar</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Notification badge</td><td>component.badge</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Modal / dialog</td><td>component.modal</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Tooltip</td><td>component.tooltip</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+          <tr><td class="cmp">Scrollbar</td><td>component.scrollbar</td><td><span class="badge new">New</span></td><td>NSM</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>15 new component definitions</b> were drawn from the NSM design system (index.html). Components carried over from Capture Client were re-valued onto the NSM palette. Retired from v1.x (not present in NSM): footer, notification center panel, content toolbar, key-value row, section title, textarea, keyword tag, date range picker, React-Select. Provide details for any of these (or new components) to re-add them.</div>
+    </section>
+
+    <!-- ════════ TAILWIND MAP ════════ -->
+    <section class="sb-section" id="tailwind">
+      <h2>Tailwind token map</h2>
+      <div class="sub">Files: tailwind.tokens.js (v3) · tailwind.theme.css (v4) — both rebased to NSM v2.0.0</div>
+      <hr class="sb-rule" />
+      <table class="map">
+        <thead><tr><th>Source token group</th><th>Tailwind theme key</th><th>Example utility</th></tr></thead>
+        <tbody>
+          <tr><td class="tok">color.surface.*</td><td>colors.surface.{l0,l1,l2,l3,hover,sink}</td><td class="cls">bg-surface-l1</td></tr>
+          <tr><td class="tok">color.border.*</td><td>colors.border.{DEFAULT,subtle}</td><td class="cls">border-border-subtle</td></tr>
+          <tr><td class="tok">color.text.*</td><td>colors.content.{primary,secondary,muted,inverse,…}</td><td class="cls">text-content-secondary</td></tr>
+          <tr><td class="tok">color.accent.*</td><td>colors.accent.{DEFAULT,hover,secondary,subtle,ring}</td><td class="cls">bg-accent</td></tr>
+          <tr><td class="tok">color.semantic.*</td><td>colors.severity.{critical,mitigated,warning,…}</td><td class="cls">bg-severity-mitigated</td></tr>
+          <tr><td class="tok">typography.fontSize.*</td><td>fontSize.{xs…3xl}</td><td class="cls">text-base</td></tr>
+          <tr><td class="tok">border.radius.*</td><td>borderRadius.{badge,input,card,pill}</td><td class="cls">rounded-card</td></tr>
+          <tr><td class="tok">spacing.*</td><td>spacing.{1,2,3,4,5,header-h,sidebar-w}</td><td class="cls">h-header-h</td></tr>
+          <tr><td class="tok">shadow.*</td><td>boxShadow.{overlay,tooltip}</td><td class="cls">shadow-overlay</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>Lean-token reminder.</b> NSM's warning-yellow and link/info-blue are not separate tokens — they map to <code>accent</code>. To restore them, add <code>colors.severity.warning-yellow</code> and <code>colors.severity.info</code> in both Tailwind files plus the JSON <code>color.semantic</code> group.</div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
