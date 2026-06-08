@@ -1,0 +1,698 @@
+/**
+ * SonicWall Capture Client – Dark Theme
+ * Version: 1.2.0 | 2026-06-07
+ *
+ * ELEVATION SCALE
+ * ─────────────────────────────────────────────────────────────────
+ *  L0  --surface-l0       #131315   Page canvas (darkest)
+ *  L1  --surface-l1       #1c1c1f   Topbar · Sidebar · Footer · Notification panel
+ *  L2  --surface-l2       #242428   Widget cards · Filter panel · Table · Tab content
+ *  L3  --surface-l3       #2c2c31   Inputs · Table headers · Inactive stepper · Toolbar btns
+ *      --surface-hover    #383840   Hover / active states
+ *      --surface-sink     #16161a   Recessed: nav dropdowns, notification header
+ *
+ * TYPOGRAPHY SCALE
+ * ─────────────────────────────────────────────────────────────────
+ *  --fs-xs   11px   Nunito-Regular     Breadcrumb · Switch label · Stepper label
+ *  --fs-sm   12px   Nunito-Regular     Helper text · Table cells · Footer · Tags
+ *  --fs-base 13px   Nunito-Regular     Body · Inputs · Nav · Table data · Buttons
+ *  --fs-md   14px   Nunito-Regular     Paragraph body
+ *  --fs-lg   16px   Nunito-Bold        Tab labels · h5/h6 sub-headings
+ *  --fs-xl   20px   Nunito-Bold        h4
+ *  --fs-2xl  24px   Nunito-Bold        h3
+ *  --fs-3xl  32px   Nunito-Bold        h2
+ *  --fs-4xl  48px   Roboto-Regular     h1 page display
+ *
+ * CHANGELOG
+ *  1.0.0  Elevation scale, topbar, sidebar, footer, widget cards, icons, stat rows
+ *  1.1.0  Threats page: toolbar, filter panel, table, pagination, checkbox, date range, notification
+ *  1.2.0  Settings page: stepper, section titles, key-value rows, tabs, tab content, toggle/switch,
+ *         textarea, cancel/secondary button. Full typography scale enforced across ALL components.
+ */
+
+
+/* ═══════════════════════════════════════════════════════════
+   SONICWALL CAPTURE CLIENT — DARK THEME SYSTEM v1.2.0
+   ───────────────────────────────────────────────────────────
+   SURFACES        TYPOGRAPHY SCALE
+   L0  #131315     --fs-xs:    11px / 1.5  Nunito-Regular
+   L1  #1c1c1f     --fs-sm:    12px / 1.5  Nunito-Regular
+   L2  #242428     --fs-base:  13px / 1.5  Nunito-Regular
+   L3  #2c2c31     --fs-md:    14px / 1.4  Nunito-SemiBold
+   Hover #383840   --fs-lg:    16px / 1.4  Nunito-Bold
+   Sink  #16161a   --fs-xl:    20px / 1.3  Nunito-Bold
+                   --fs-2xl:   24px / 1.2  Nunito-Bold
+                   --fs-3xl:   32px / 1.1  Roboto-Regular
+                   --fs-4xl:   48px / 1.2  Roboto-Regular
+   ═══════════════════════════════════════════════════════════ */
+
+/* v2.0.0 — token layer rebased onto the NSM palette. NOTE: the component
+   selector blocks further below are legacy Capture Client (.app-header,
+   .react-bs-table, .switch-sonicwall, …); they consume these variables but
+   some carry hardcoded non-token values pending an NSM-specific rework.
+   The canonical, NSM-aligned definitions live in sonicwall-cc-tokens.json
+   and storybook.html. */
+:root {
+  /* Surfaces (NSM neutral greys) */
+  --surface-l0:       #282828;
+  --surface-l1:       #333333;
+  --surface-l2:       #333333;
+  --surface-l3:       #434343;
+  --surface-hover:    #515151;
+  --surface-sink:     #282828;
+
+  /* Borders */
+  --border:           #515151;
+  --border-subtle:    #65656a;
+
+  /* Text */
+  --text-primary:     #ffffff;
+  --text-secondary:   #cccccc;
+  --text-muted:       #868686;
+  --text-inverse:     #333333;
+  --text-on-accent:   #ffffff;
+
+  /* Accent (link/info-blue & warning-yellow collapse here) */
+  --accent:           #ff791a;
+  --accent-secondary: #fda348;
+  --accent-hover:     #e6640a;
+  --accent-subtle:    rgba(255,121,26,0.07);
+  --accent-ring:      rgba(255,121,26,0.2);
+
+  /* Semantic */
+  --sev-critical:     #cc0000;
+  --sev-warning:      #ff791a;
+  --sev-mitigated:    #99cc00;
+  --sev-not-mitigated:#cc0000;
+  --sev-benign:       #868686;
+
+  /* Typography — system stack */
+  --font-base:        -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-semi:        -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-bold:        -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-light:       -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display:     -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:        'SF Mono', 'Fira Code', monospace;
+
+  --fs-xs:     11px;
+  --fs-sm:     12px;
+  --fs-base:   13px;
+  --fs-md:     14px;
+  --fs-lg:     16px;
+  --fs-xl:     18px;
+  --fs-2xl:    20px;
+  --fs-3xl:    28px;
+
+  --lh-tight:  1.1;
+  --lh-snug:   1.2;
+  --lh-normal: 1.4;
+  --lh-relaxed:1.5;
+  --lh-loose:  1.6;
+
+  --fw-regular:  400;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* Radius (NSM scale) */
+  --r-badge: 2px;
+  --r-input: 3px;
+  --r-card:  5px;
+  --r-pill:  50%;
+
+  /* Spacing scale + layout */
+  --space-1: 3px;
+  --space-2: 5px;
+  --space-3: 10px;
+  --space-4: 20px;
+  --space-5: 29px;
+  --header-height: 83px;
+  --sidebar-width: 200px;
+
+  /* Shadows */
+  --shadow-overlay: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-tooltip: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+/* ──────────────────────────────────────────────
+   L0: PAGE BACKGROUND
+   ────────────────────────────────────────────── */
+body, .app-body, .dashboard, .dashboard-dark-theme {
+  background-color: var(--surface-l0) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  line-height: var(--lh-relaxed) !important;
+}
+
+/* ──────────────────────────────────────────────
+   TYPOGRAPHY SCALE — HEADINGS
+   ────────────────────────────────────────────── */
+h1 {
+  font-family: var(--font-display) !important;
+  font-size: var(--fs-4xl) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-snug) !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.5px !important;
+}
+h2 {
+  font-family: var(--font-bold) !important;
+  font-size: var(--fs-3xl) !important;
+  font-weight: var(--fw-bold) !important;
+  line-height: var(--lh-snug) !important;
+  color: var(--text-primary) !important;
+}
+h3 {
+  font-family: var(--font-bold) !important;
+  font-size: var(--fs-2xl) !important;
+  font-weight: var(--fw-bold) !important;
+  line-height: var(--lh-normal) !important;
+  color: var(--text-primary) !important;
+}
+h4 {
+  font-family: var(--font-bold) !important;
+  font-size: var(--fs-xl) !important;
+  font-weight: var(--fw-bold) !important;
+  line-height: var(--lh-normal) !important;
+  color: var(--text-primary) !important;
+}
+h5, h6 {
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-lg) !important;
+  font-weight: var(--fw-semibold) !important;
+  line-height: var(--lh-normal) !important;
+  color: var(--text-primary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Section titles (uppercase labels like "TENANT CUSTOMIZATION") */
+.settings-section-title,
+.new-wizard-container h6,
+.section-title,
+[class*="section-title"],
+.new-wizard-container > div > div:first-child > span,
+legend {
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-sm) !important;
+  font-weight: var(--fw-semibold) !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--text-secondary) !important;
+  line-height: var(--lh-normal) !important;
+}
+
+/* Body paragraph text */
+p {
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-loose) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Helper / hint text */
+small, .text-muted, .helper-text, .form-text,
+.info-text, .hint-text {
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-sm) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-relaxed) !important;
+  color: var(--text-muted) !important;
+}
+
+/* ──────────────────────────────────────────────
+   BREADCRUMB
+   ────────────────────────────────────────────── */
+.breadcrumb { background: transparent !important; }
+.breadcrumb-item, .breadcrumb-item a,
+.breadcrumb-item + .breadcrumb-item::before {
+  font-family: var(--font-light) !important;
+  font-size: var(--fs-xs) !important;
+  font-weight: var(--fw-regular) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
+}
+.breadcrumb-item.active { color: var(--text-secondary) !important; }
+
+/* ──────────────────────────────────────────────
+   L1: TOP BAR
+   ────────────────────────────────────────────── */
+.app-header.navbar {
+  background-color: var(--surface-l1) !important;
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+.app-header.navbar .navbar-brand { background-color: var(--surface-l1) !important; }
+.app-header .nav-link,
+.app-header .nav-item,
+.app-header .dropdown-toggle {
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  color: var(--text-secondary) !important;
+}
+.app-header .nav-link:hover {
+  color: var(--text-primary) !important;
+  background-color: rgba(255,255,255,0.05) !important;
+}
+.app-header select, .app-header .form-control, .app-header input {
+  background-color: var(--surface-l3) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-subtle) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+
+/* ──────────────────────────────────────────────
+   L1: SIDEBAR
+   ────────────────────────────────────────────── */
+.sidebar {
+  background: var(--surface-l1) !important;
+  border-right: 1px solid var(--border) !important;
+}
+.sidebar .nav-link {
+  font-family: var(--font-light) !important;
+  font-size: var(--fs-base) !important;
+  font-weight: var(--fw-regular) !important;
+  color: #8c8c96 !important;
+  line-height: var(--lh-normal) !important;
+}
+.sidebar .nav-link:hover {
+  color: var(--text-primary) !important;
+  background: var(--surface-l3) !important;
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link.nav-dropdown-toggle.active,
+.sidebar .nav-link.large-item.active {
+  color: var(--text-primary) !important;
+  background: var(--surface-l3) !important;
+}
+.sidebar .nav-link.nav-dropdown-toggle:hover,
+.sidebar .nav-link.large-item:hover { background: var(--surface-l3) !important; }
+.sidebar .nav-dropdown.open { background: var(--surface-sink) !important; border-top: 1px solid var(--border) !important; }
+.sidebar .nav-title {
+  background: var(--surface-sink) !important;
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-xs) !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
+}
+
+/* ──────────────────────────────────────────────
+   L1: FOOTER
+   ────────────────────────────────────────────── */
+.app-footer {
+  background-color: var(--surface-l1) !important;
+  border-top: 1px solid var(--border) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-sm) !important;
+  color: var(--text-muted) !important;
+}
+
+/* ──────────────────────────────────────────────
+   STEP WIZARD / STEPPER
+   ────────────────────────────────────────────── */
+.new-wizard-container,
+[class*="wizard"],
+[class*="stepper"] {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+/* Step number circles */
+.progress-count, [class*="step-number"], [class*="step"] .count {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-muted) !important;
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-base) !important;
+  font-weight: var(--fw-semibold) !important;
+}
+/* Active step */
+.progress-count.active,
+[class*="step"].active .count,
+.new-wizard-container .active .progress-count {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--text-on-accent) !important;
+}
+/* Step labels */
+.progress-label, [class*="step-label"] {
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-xs) !important;
+  font-weight: var(--fw-semibold) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
+}
+.progress-label.active, [class*="step"].active .progress-label {
+  color: var(--text-secondary) !important;
+}
+/* Connector lines */
+[class*="step-connector"], [class*="wizard-line"] {
+  border-color: var(--border) !important;
+  background-color: var(--border) !important;
+}
+
+/* ──────────────────────────────────────────────
+   SETTINGS SECTIONS — Section title + divider
+   ────────────────────────────────────────────── */
+hr, .section-divider {
+  border-color: var(--border) !important;
+}
+/* Orange-accented section title rows */
+.new-wizard-container hr,
+[class*="section"] hr {
+  border-top: 1px solid var(--accent) !important;
+  opacity: 1 !important;
+}
+
+/* ──────────────────────────────────────────────
+   KEY-VALUE INFO ROWS (Tenant Settings table)
+   ────────────────────────────────────────────── */
+.settings-row, .key-value-row, [class*="settings-row"],
+.new-wizard-container .row .col {
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  line-height: var(--lh-relaxed) !important;
+}
+/* Right-aligned key labels */
+label,
+.new-wizard-container label,
+.settings-label, .key-label {
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-base) !important;
+  font-weight: var(--fw-semibold) !important;
+  line-height: var(--lh-relaxed) !important;
+  color: var(--text-secondary) !important;
+}
+/* Monospace / code values (tokens, IDs) */
+.settings-value, .token-value,
+[class*="tenant-token"], [class*="copy"] {
+  font-family: 'Courier New', monospace !important;
+  font-size: var(--fs-sm) !important;
+  color: var(--text-muted) !important;
+  word-break: break-all !important;
+}
+
+/* ──────────────────────────────────────────────
+   FORM ELEMENTS
+   ────────────────────────────────────────────── */
+.form-control,
+input[type="text"], input[type="search"],
+input[type="email"], input[type="number"],
+input[type="password"],
+select, textarea {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  line-height: var(--lh-relaxed) !important;
+  border-radius: 4px !important;
+}
+.form-control::placeholder,
+textarea::placeholder { color: var(--text-muted) !important; }
+.form-control:focus, textarea:focus, select:focus {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px var(--accent-ring) !important;
+  color: var(--text-primary) !important;
+  outline: none !important;
+}
+/* Textarea upload areas */
+textarea.form-control {
+  background-color: var(--surface-l2) !important;
+  border: 1px solid var(--border-subtle) !important;
+  resize: vertical !important;
+}
+
+/* ──────────────────────────────────────────────
+   TABS (nav-tabs / nav-tabs-new)
+   ────────────────────────────────────────────── */
+.nav-tabs, .nav-tabs-new {
+  border-bottom-color: var(--border) !important;
+  background: transparent !important;
+}
+.nav-tabs .nav-link,
+.nav-tabs-new .nav-link {
+  font-family: var(--font-bold) !important;
+  font-size: var(--fs-lg) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-normal) !important;
+  color: var(--text-muted) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  padding-bottom: 0.5rem !important;
+}
+.nav-tabs .nav-link:hover,
+.nav-tabs-new .nav-link:hover {
+  color: var(--text-secondary) !important;
+  border-bottom-color: var(--border-subtle) !important;
+}
+.nav-tabs .nav-link.active,
+.nav-tabs-new .nav-link.active {
+  color: var(--text-primary) !important;
+  background: transparent !important;
+  border-bottom: 3px solid var(--accent) !important;
+}
+/* Tab content panel */
+.tab-content, .tab-content-new {
+  background-color: var(--surface-l2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  line-height: var(--lh-relaxed) !important;
+}
+
+/* ──────────────────────────────────────────────
+   DATA TABLE
+   ────────────────────────────────────────────── */
+.table, .table-hover {
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+.table th, .table td {
+  padding: 0.65rem 0.75rem !important;
+  border-top-color: var(--border) !important;
+  border-bottom-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  vertical-align: middle !important;
+  line-height: var(--lh-normal) !important;
+}
+.table thead th, th.sort-column, th {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: #8c8c96 !important;
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-sm) !important;
+  font-weight: var(--fw-semibold) !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  line-height: var(--lh-normal) !important;
+}
+.table thead th:hover, th.sort-column:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--text-primary) !important;
+}
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover {
+  background-color: var(--accent-subtle) !important;
+  color: var(--text-primary) !important;
+}
+.table tbody tr { border-bottom: 1px solid var(--border) !important; }
+.react-bs-table-bordered { border-color: var(--border) !important; }
+
+/* ──────────────────────────────────────────────
+   TOGGLE / SWITCH
+   ────────────────────────────────────────────── */
+.switch-label {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-muted) !important;
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-xs) !important;
+  font-weight: var(--fw-semibold) !important;
+  letter-spacing: 0.04em !important;
+}
+.switch-handle {
+  background-color: var(--surface-l1) !important;
+  border-color: var(--border-subtle) !important;
+}
+.switch.switch-sonicwall input:checked ~ .switch-label {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.switch.switch-sonicwall input:checked ~ .switch-handle {
+  background-color: var(--text-on-accent) !important;
+}
+
+/* ──────────────────────────────────────────────
+   CONTENT TOOLBAR / FILTER PANEL
+   ────────────────────────────────────────────── */
+.contentToolbar, .contentToolbar.show {
+  background-color: var(--surface-l2) !important;
+  border-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+.contentToolbar.borderTop { border-top: 2px solid var(--accent) !important; }
+.contentToolbar-footer {
+  background-color: var(--surface-l1) !important;
+  border-color: var(--border) !important;
+}
+.actionIcon {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+}
+.actionIcon:hover { background-color: var(--surface-hover) !important; color: var(--text-primary) !important; }
+.actionIcon.active { background-color: var(--surface-l3) !important; color: var(--accent) !important; }
+
+/* ──────────────────────────────────────────────
+   DATE RANGE / SLIDER
+   ────────────────────────────────────────────── */
+.DateRangePickerInput, .DateRangePickerInput__withBorder,
+.DateInput, .DateInput_1, .DateInput_input, .DateRangePickerInput input {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+.sliderdot { background-color: var(--surface-l3) !important; border-color: var(--border-subtle) !important; }
+.sliderbar { background-color: var(--surface-l3) !important; }
+
+/* ──────────────────────────────────────────────
+   CHECKBOXES
+   ────────────────────────────────────────────── */
+.checkbox { color: var(--text-secondary) !important; font-family: var(--font-base) !important; font-size: var(--fs-base) !important; }
+.checkbox .checkmark, span.checkmark { background-color: var(--surface-l3) !important; border-color: var(--border-subtle) !important; }
+.checkbox .checkmark.active, span.checkmark.active,
+.checkbox input:checked ~ .checkmark { background-color: var(--accent) !important; border-color: var(--accent) !important; }
+.checkbox:hover .checkmark { border-color: var(--accent) !important; }
+
+/* ──────────────────────────────────────────────
+   KEYWORD TAGS
+   ────────────────────────────────────────────── */
+.keyword-tag {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-sm) !important;
+  border-radius: 3px !important;
+}
+
+/* ──────────────────────────────────────────────
+   PAGINATION
+   ────────────────────────────────────────────── */
+.react-bs-table-pagination {
+  background-color: var(--surface-l2) !important;
+  border-top: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+.pagination .page-item .page-link {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+.pagination .page-item .page-link:hover { background-color: var(--surface-hover) !important; color: var(--text-primary) !important; }
+.pagination .page-item.active .page-link { background-color: var(--accent) !important; border-color: var(--accent) !important; color: var(--text-on-accent) !important; }
+.pagination .page-item.disabled .page-link { background-color: var(--surface-l1) !important; color: var(--text-muted) !important; }
+.react-bs-table-pagination select, .react-bs-table-pagination .form-control {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+}
+
+/* ──────────────────────────────────────────────
+   NOTIFICATION CENTER
+   ────────────────────────────────────────────── */
+.notification-center { background-color: var(--surface-l1) !important; border-color: var(--border) !important; }
+.notification-center-header {
+  background-color: var(--surface-sink) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-semi) !important;
+  font-size: var(--fs-base) !important;
+  font-weight: var(--fw-semibold) !important;
+}
+.notification-center-body { background-color: var(--surface-l1) !important; color: var(--text-secondary) !important; font-family: var(--font-base) !important; font-size: var(--fs-base) !important; }
+.notification-center-footer { background-color: var(--surface-l1) !important; border-top: 1px solid var(--border) !important; }
+
+/* ──────────────────────────────────────────────
+   REACT-SELECT
+   ────────────────────────────────────────────── */
+[class*="-control"] { background-color: var(--surface-l3) !important; border-color: var(--border-subtle) !important; }
+[class*="-singleValue"], [class*="-placeholder"], [class*="-ValueContainer"] { color: var(--text-primary) !important; background: transparent !important; font-family: var(--font-base) !important; font-size: var(--fs-base) !important; }
+[class*="-menu"] { background-color: var(--surface-l3) !important; border-color: var(--border-subtle) !important; }
+[class*="-option"] { background-color: var(--surface-l3) !important; color: var(--text-primary) !important; font-family: var(--font-base) !important; font-size: var(--fs-base) !important; }
+[class*="-option"]:hover, [class*="-option--is-focused"] { background-color: var(--surface-hover) !important; }
+
+/* ──────────────────────────────────────────────
+   DROPDOWN MENUS
+   ────────────────────────────────────────────── */
+.dropdown-menu { background-color: var(--surface-l3) !important; border-color: var(--border-subtle) !important; }
+.dropdown-item { color: var(--text-primary) !important; background: transparent !important; font-family: var(--font-base) !important; font-size: var(--fs-base) !important; }
+.dropdown-item:hover { background-color: var(--surface-hover) !important; }
+.dropdown-divider { border-color: var(--border-subtle) !important; }
+
+/* ──────────────────────────────────────────────
+   BUTTONS
+   ────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-base) !important;
+  font-size: var(--fs-base) !important;
+  font-weight: var(--fw-regular) !important;
+  line-height: var(--lh-relaxed) !important;
+  letter-spacing: 0.01em !important;
+}
+.btn-pill-ux.btn-primary, .btn-primary {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--text-on-accent) !important;
+  border-radius: 50px !important;
+}
+.btn-pill-ux.btn-primary:hover, .btn-primary:hover {
+  background-color: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+}
+/* Cancel / secondary button */
+.btn-pill-ux.btn-secondary, .btn-secondary,
+button.btn-pill-ux:not(.btn-primary) {
+  background-color: var(--surface-l3) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+  border-radius: 50px !important;
+}
+.btn-pill-ux.btn-secondary:hover, .btn-secondary:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ──────────────────────────────────────────────
+   DASHBOARD WIDGET CARDS
+   ────────────────────────────────────────────── */
+.react-grid-item, .widget-container, .dashboardDarkRow {
+  background-color: var(--surface-l2) !important;
+  border: 1px solid var(--border) !important;
+}
+.color-snwlSelected, .bold-14.color-snwlSelected { color: #ffffff !important; }
+.tenant-dashboard-widget-content-dark-theme { background-color: transparent !important; color: inherit !important; }
+.color-severity-critical, .card.color-severity-critical,
+.color-severity-in-queue, .card.color-severity-in-queue,
+.icon.color-snwlSelected { color: var(--accent) !important; }

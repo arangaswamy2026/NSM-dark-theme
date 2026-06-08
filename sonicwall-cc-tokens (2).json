@@ -1,0 +1,385 @@
+{
+  "$schema": "https://design-tokens.org/schema/1.0",
+  "meta": {
+    "name": "SonicWall NSM – Dark Theme",
+    "version": "2.0.0",
+    "date": "2026-06-07",
+    "changelog": {
+      "1.0.0": "Capture Client: elevation scale, topbar, sidebar, footer, widget cards, icons, stat rows.",
+      "1.1.0": "Capture Client Threats page: toolbar, filter panel, table, pagination, checkbox, date range, notification center, breadcrumb, React-Select.",
+      "1.2.0": "Capture Client Settings page: stepper, section titles, key-value rows, tabs, tab content, toggle/switch, textarea, cancel button.",
+      "2.0.0": "REBASED onto the NSM (Network Security Manager) dark theme as the new baseline — neutral-grey surfaces, white text scale, system font stack, NSM radii/spacing. Token set kept lean: existing token slots were re-valued rather than expanded; NSM's extra accent/status distinctions were collapsed onto existing tokens (warning-yellow → accent orange, link/info-blue → accent orange). Drew in missing component definitions from NSM: modal, tooltip, avatar, notification badge, status flag, LED dot, HA status, count block, title pane, tree item, radio, select, slider, scrollbar. Added a 'done' state to the stepper."
+    },
+    "notes": [
+      "Collapse decisions (per hand-off agreement): warning-yellow #ffcc00 → accent #ff791a; link/info-blue #47afe8 → accent #ff791a. The LED-dot and status-flag components therefore render yellow/blue states as the orange accent. Add color.status.{warning-yellow,info} later if these distinctions are needed.",
+      "Font weights medium(500)/light(200) collapsed to semibold(600)/regular(400). Radius 2px maps to border.radius.badge."
+    ]
+  },
+  "color": {
+    "surface": {
+      "l0-page":   { "$value": "#282828", "$type": "color", "$description": "App canvas — darkest base (NSM app bg rgb(40,40,40))." },
+      "l1-chrome": { "$value": "#333333", "$type": "color", "$description": "Sidebar · header · panels · inputs · tables · modals (NSM surface rgb(51,51,51))." },
+      "l2-card":   { "$value": "#333333", "$type": "color", "$description": "Cards · tab groups · table body (NSM surface rgb(51,51,51))." },
+      "l3-raised": { "$value": "#434343", "$type": "color", "$description": "Raised: zebra (even) rows · selected tree/nav (NSM surface-raised rgb(67,67,67))." },
+      "l3-hover":  { "$value": "#515151", "$type": "color", "$description": "Hover / active / slider track (NSM surface-hover rgb(81,81,81); active rgb(85) collapses here)." },
+      "l-sink":    { "$value": "#282828", "$type": "color", "$description": "Recessed — matches app canvas (NSM has no distinct sink)." }
+    },
+    "border": {
+      "default": { "$value": "#515151", "$type": "color", "$description": "Separators — panel/table/divider borders (NSM border rgb(81,81,81))." },
+      "subtle":  { "$value": "#65656a", "$type": "color", "$description": "Control borders — inputs, checkbox, radio (NSM border-light rgb(101,101,106))." }
+    },
+    "text": {
+      "primary":        { "$value": "#ffffff", "$type": "color", "$description": "Headings, active labels, input values, counts (NSM text-primary)." },
+      "secondary":      { "$value": "#cccccc", "$type": "color", "$description": "Body, nav items, table cells, table headers, form labels (NSM text-secondary)." },
+      "muted":          { "$value": "#868686", "$type": "color", "$description": "Captions, placeholders, count-block labels, disabled (NSM text-muted; tertiary/disabled collapse here)." },
+      "table-header":   { "$value": "#cccccc", "$type": "color", "$description": "Table column headers (NSM uses text-secondary)." },
+      "sidebar-label":  { "$value": "#cccccc", "$type": "color", "$description": "Sidebar nav items (resting)." },
+      "sidebar-active": { "$value": "#ffffff", "$type": "color", "$description": "Sidebar nav items (hover/active)." },
+      "on-accent":      { "$value": "#ffffff", "$type": "color", "$description": "Text on orange / red / dark status backgrounds." },
+      "inverse":        { "$value": "#333333", "$type": "color", "$description": "Dark text on light status chips (HA status on green/yellow). Reuses surface tone (NSM text-inverse)." }
+    },
+    "accent": {
+      "default":    { "$value": "#ff791a", "$type": "color", "$description": "Brand orange — icons, active states, primary CTA, focus, links (NSM accent-primary; link/info-blue collapse here)." },
+      "secondary":  { "$value": "#fda348", "$type": "color", "$description": "Secondary accent (NSM accent-secondary rgb(253,163,72))." },
+      "hover":      { "$value": "#e6640a", "$type": "color", "$description": "Primary button pressed/hover (NSM rgb(230,100,10))." },
+      "subtle":     { "$value": "rgba(255,121,26,0.07)", "$type": "color", "$description": "Row / surface hover tint." },
+      "focus-ring": { "$value": "rgba(255,121,26,0.2)", "$type": "color", "$description": "Input focus glow (NSM focuses blue → collapsed to accent)." }
+    },
+    "semantic": {
+      "critical":      { "$value": "#cc0000", "$type": "color", "$description": "Critical / danger (NSM status-danger)." },
+      "warning":       { "$value": "#ff791a", "$type": "color", "$description": "Warning (NSM status-warning yellow #ffcc00 collapsed to accent orange)." },
+      "mitigated":     { "$value": "#99cc00", "$type": "color", "$description": "Success / online / done (NSM status-success lime)." },
+      "not-mitigated": { "$value": "#cc0000", "$type": "color", "$description": "Error / offline (NSM status-danger)." },
+      "benign":        { "$value": "#868686", "$type": "color", "$description": "Neutral / inactive / info (NSM info-blue collapsed to muted grey)." }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "base":    { "$value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "$type": "fontFamily", "$description": "System stack — all UI text (NSM baseline; Nunito/Roboto retired)." },
+      "semi":    { "$value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "$type": "fontFamily", "$description": "Same stack at weight 600." },
+      "bold":    { "$value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "$type": "fontFamily", "$description": "Same stack at weight 700." },
+      "light":   { "$value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "$type": "fontFamily", "$description": "Same stack at weight 400 (NSM light 200 collapsed to regular)." },
+      "display": { "$value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "$type": "fontFamily", "$description": "Same stack — dashboard title." },
+      "mono":    { "$value": "'SF Mono', 'Fira Code', monospace", "$type": "fontFamily", "$description": "Code, IP addresses, token/ID values." }
+    },
+    "fontSize": {
+      "xs":   { "$value": "11px", "$type": "fontSize", "$description": "Captions, badges, count-block labels, step labels." },
+      "sm":   { "$value": "12px", "$type": "fontSize", "$description": "Secondary labels, table headers, tooltips, helper text." },
+      "base": { "$value": "13px", "$type": "fontSize", "$description": "Default — body, nav, table cells, inputs, buttons, breadcrumb." },
+      "md":   { "$value": "14px", "$type": "fontSize", "$description": "App name / links, modal & panel headers." },
+      "lg":   { "$value": "16px", "$type": "fontSize", "$description": "Large body, logo." },
+      "xl":   { "$value": "18px", "$type": "fontSize", "$description": "Panel header / h4." },
+      "2xl":  { "$value": "20px", "$type": "fontSize", "$description": "Section heading / h3." },
+      "3xl":  { "$value": "28px", "$type": "fontSize", "$description": "Dashboard title / h2 · also the icon size." }
+    },
+    "fontWeight": {
+      "regular":  { "$value": "400", "$type": "fontWeight" },
+      "semibold": { "$value": "600", "$type": "fontWeight", "$description": "Headings, labels, active tab (NSM medium 500 collapses here)." },
+      "bold":     { "$value": "700", "$type": "fontWeight", "$description": "Title, count values, badges." }
+    },
+    "lineHeight": {
+      "tight":   { "$value": "1.1", "$type": "dimension", "$description": "Count values." },
+      "snug":    { "$value": "1.2", "$type": "dimension" },
+      "normal":  { "$value": "1.4", "$type": "dimension", "$description": "Default UI / table cells." },
+      "relaxed": { "$value": "1.5", "$type": "dimension" },
+      "loose":   { "$value": "1.6", "$type": "dimension", "$description": "Modal / panel body copy." }
+    },
+    "letterSpacing": {
+      "normal": { "$value": "0", "$type": "dimension" },
+      "wide":   { "$value": "0.3px", "$type": "dimension", "$description": "Section titles (NSM)." },
+      "wider":  { "$value": "0.5px", "$type": "dimension", "$description": "Logo / app name (NSM)." }
+    }
+  },
+  "spacing": {
+    "1": { "$value": "3px",  "$type": "dimension" },
+    "2": { "$value": "5px",  "$type": "dimension" },
+    "3": { "$value": "10px", "$type": "dimension" },
+    "4": { "$value": "20px", "$type": "dimension" },
+    "5": { "$value": "29px", "$type": "dimension", "$description": "Control height (button / input / avatar)." },
+    "header-height":  { "$value": "83px",  "$type": "dimension", "$description": "Top header bar." },
+    "sidebar-width":  { "$value": "200px", "$type": "dimension", "$description": "Left nav." },
+    "table-cell-padding": { "$value": "7px 12px", "$type": "dimension" }
+  },
+  "border": {
+    "radius": {
+      "badge": { "$value": "2px", "$type": "borderRadius", "$description": "Status flags (NSM sm)." },
+      "input": { "$value": "3px", "$type": "borderRadius", "$description": "Buttons, inputs, selects, tooltips, count blocks (NSM md)." },
+      "card":  { "$value": "5px", "$type": "borderRadius", "$description": "Panels, cards, modals, nav (NSM lg)." },
+      "pill":  { "$value": "50%", "$type": "borderRadius", "$description": "Dots, avatars, radio (NSM full). NSM buttons are NOT pill — they use radius.input." }
+    },
+    "width": {
+      "default": { "$value": "1px", "$type": "borderWidth" }
+    }
+  },
+  "shadow": {
+    "overlay": { "$value": "0 4px 16px rgba(0,0,0,0.4)",  "$type": "shadow", "$description": "Modals, popovers." },
+    "tooltip": { "$value": "0 2px 8px rgba(0,0,0,0.35)",  "$type": "shadow", "$description": "Tooltips." }
+  },
+  "component": {
+    "topbar": {
+      "background": { "$value": "{color.surface.l1-chrome}" },
+      "height": { "$value": "{spacing.header-height}" },
+      "radius": { "$value": "{border.radius.card}" },
+      "appNameColor": { "$value": "{color.accent.default}", "$description": "NSM app name is blue → collapsed to accent." },
+      "appNameFontSize": { "$value": "{typography.fontSize.md}" },
+      "dividerColor": { "$value": "{color.border.default}" },
+      "navItemColor": { "$value": "{color.text.muted}" },
+      "navItemColorActive": { "$value": "{color.text.primary}" },
+      "navItemBorderActive": { "$value": "2px solid {color.accent.default}" },
+      "roleColor": { "$value": "{color.text.muted}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "sidebar": {
+      "background": { "$value": "{color.surface.l1-chrome}" },
+      "width": { "$value": "{spacing.sidebar-width}" },
+      "radius": { "$value": "{border.radius.card}" },
+      "logoTextColor": { "$value": "{color.text.primary}" },
+      "logoSubColor": { "$value": "{color.text.muted}" },
+      "navItemColor": { "$value": "{color.text.sidebar-label}" },
+      "navItemColorHover": { "$value": "{color.text.sidebar-active}" },
+      "navItemBgHover": { "$value": "{color.surface.l3-hover}" },
+      "navItemBgActive": { "$value": "{color.surface.l3-raised}" },
+      "navItemIconColor": { "$value": "{color.accent.default}" },
+      "selectedMarker": { "$value": "3px solid {color.accent.default}", "$description": "Left edge marker on selected item." },
+      "level1FontSize": { "$value": "{typography.fontSize.sm}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "breadcrumb": {
+      "background": { "$value": "{color.surface.l1-chrome}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" },
+      "color": { "$value": "{color.text.secondary}" },
+      "slashColor": { "$value": "{color.text.muted}" },
+      "linkColor": { "$value": "{color.accent.default}", "$description": "Clickable crumb (NSM blue → collapsed to accent); underline on hover." },
+      "radius": { "$value": "{border.radius.input}" }
+    },
+    "iconButton": {
+      "$description": "Header / toolbar action button; optional leading icon + label.",
+      "minWidth": { "$value": "29px" },
+      "height": { "$value": "{spacing.5}" },
+      "radius": { "$value": "{border.radius.input}" },
+      "background": { "$value": "transparent" },
+      "backgroundHover": { "$value": "{color.surface.l3-hover}" },
+      "color": { "$value": "{color.text.secondary}" },
+      "colorHover": { "$value": "{color.text.primary}" },
+      "primaryBg": { "$value": "{color.accent.default}" },
+      "primaryBgHover": { "$value": "{color.accent.hover}" },
+      "primaryColor": { "$value": "{color.text.on-accent}" },
+      "accentColor": { "$value": "{color.accent.default}", "$description": "Accent (icon-only) variant." },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "tabs": {
+      "groupBackground": { "$value": "{color.surface.l1-chrome}" },
+      "groupRadius": { "$value": "{border.radius.card}" },
+      "navBorderBottom": { "$value": "1px solid {color.border.default}" },
+      "tabColor": { "$value": "{color.text.muted}" },
+      "tabColorHover": { "$value": "{color.text.primary}" },
+      "tabColorActive": { "$value": "{color.text.primary}" },
+      "tabBorderActive": { "$value": "2px solid {color.accent.default}" },
+      "tabFontWeightActive": { "$value": "{typography.fontWeight.semibold}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "countBlock": {
+      "$description": "KPI tile — icon area, gradient divider, label + count.",
+      "background": { "$value": "{color.surface.l1-chrome}" },
+      "backgroundHover": { "$value": "{color.surface.l3-hover}" },
+      "radius": { "$value": "{border.radius.input}" },
+      "iconColor": { "$value": "{color.accent.default}" },
+      "dividerColor": { "$value": "{color.accent.default}", "$description": "Vertical gradient (transparent→accent→transparent)." },
+      "labelColor": { "$value": "{color.text.muted}" },
+      "labelFontSize": { "$value": "{typography.fontSize.xs}" },
+      "countColor": { "$value": "{color.text.primary}" },
+      "countFontSize": { "$value": "22px" },
+      "countFontWeight": { "$value": "{typography.fontWeight.bold}" }
+    },
+    "statusFlag": {
+      "$description": "Severity badge (square). NSM minor=yellow & info=blue collapse to accent.",
+      "size": { "$value": "20px" },
+      "radius": { "$value": "{border.radius.badge}" },
+      "critical": { "$value": "{color.semantic.not-mitigated}" },
+      "major": { "$value": "{color.accent.default}" },
+      "minor": { "$value": "{color.semantic.warning}", "$description": "NSM yellow → accent orange." },
+      "info": { "$value": "{color.accent.default}", "$description": "NSM blue → accent orange." },
+      "textColor": { "$value": "{color.text.on-accent}" }
+    },
+    "ledDot": {
+      "$description": "Round status indicator. yellow/blue collapse to accent (see notes).",
+      "size": { "$value": "12px" },
+      "radius": { "$value": "{border.radius.pill}" },
+      "green": { "$value": "{color.semantic.mitigated}" },
+      "yellow": { "$value": "{color.accent.default}", "$description": "NSM yellow → accent orange." },
+      "orange": { "$value": "{color.accent.default}" },
+      "red": { "$value": "{color.semantic.not-mitigated}" },
+      "blue": { "$value": "{color.accent.default}", "$description": "NSM blue → accent orange." },
+      "grey": { "$value": "{color.semantic.benign}" }
+    },
+    "haStatus": {
+      "$description": "High-availability role indicator (round, dark text on light chip).",
+      "size": { "$value": "20px" },
+      "radius": { "$value": "{border.radius.pill}" },
+      "textColor": { "$value": "{color.text.inverse}" },
+      "primaryBg": { "$value": "{color.semantic.mitigated}" },
+      "secondaryBg": { "$value": "{color.semantic.warning}", "$description": "NSM yellow → accent orange." }
+    },
+    "badge": {
+      "$description": "Notification count overlay.",
+      "background": { "$value": "{color.semantic.not-mitigated}" },
+      "color": { "$value": "{color.text.on-accent}" },
+      "fontSize": { "$value": "10px" },
+      "fontWeight": { "$value": "{typography.fontWeight.bold}" },
+      "radius": { "$value": "8px" }
+    },
+    "avatar": {
+      "size": { "$value": "{spacing.5}" },
+      "background": { "$value": "{color.accent.default}" },
+      "color": { "$value": "{color.text.on-accent}" },
+      "radius": { "$value": "{border.radius.pill}" },
+      "font": { "$value": "{typography.fontFamily.semi}" },
+      "fontSize": { "$value": "{typography.fontSize.sm}" },
+      "fontWeight": { "$value": "{typography.fontWeight.bold}" }
+    },
+    "formInput": {
+      "background": { "$value": "{color.surface.l2-card}", "$description": "NSM inputs sit on the surface tone, not a raised tone." },
+      "border": { "$value": "{color.border.default}" },
+      "color": { "$value": "{color.text.primary}" },
+      "placeholder": { "$value": "{color.text.muted}" },
+      "disabledOpacity": { "$value": "0.5" },
+      "focusBorder": { "$value": "{color.accent.default}", "$description": "NSM focuses blue → collapsed to accent." },
+      "height": { "$value": "30px" },
+      "radius": { "$value": "{border.radius.input}" },
+      "labelColor": { "$value": "{color.text.secondary}" },
+      "labelFontSize": { "$value": "{typography.fontSize.sm}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "select": {
+      "background": { "$value": "{color.surface.l2-card}" },
+      "border": { "$value": "{color.border.default}" },
+      "color": { "$value": "{color.text.primary}" },
+      "chevronColor": { "$value": "{color.text.muted}" },
+      "height": { "$value": "30px" },
+      "radius": { "$value": "{border.radius.input}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "checkbox": {
+      "background": { "$value": "{color.surface.l2-card}" },
+      "borderColor": { "$value": "{color.border.subtle}" },
+      "checkedBg": { "$value": "{color.accent.default}" },
+      "radius": { "$value": "{border.radius.badge}" },
+      "size": { "$value": "14px" },
+      "labelColor": { "$value": "{color.text.secondary}" },
+      "labelFontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "radio": {
+      "$description": "Same anatomy as checkbox with a circular control.",
+      "background": { "$value": "{color.surface.l2-card}" },
+      "borderColor": { "$value": "{color.border.subtle}" },
+      "checkedColor": { "$value": "{color.accent.default}" },
+      "radius": { "$value": "{border.radius.pill}" },
+      "size": { "$value": "14px" },
+      "labelColor": { "$value": "{color.text.secondary}" },
+      "labelFontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "slider": {
+      "trackBg": { "$value": "{color.surface.l3-hover}" },
+      "fillBg": { "$value": "{color.accent.default}" },
+      "thumbBg": { "$value": "{color.accent.default}" },
+      "thumbShadow": { "$value": "0 1px 4px rgba(0,0,0,0.4)" }
+    },
+    "dataTable": {
+      "headerBg": { "$value": "{color.surface.l1-chrome}" },
+      "headerColor": { "$value": "{color.text.table-header}" },
+      "headerFontWeight": { "$value": "{typography.fontWeight.semibold}" },
+      "headerFontSize": { "$value": "{typography.fontSize.sm}" },
+      "rowBg": { "$value": "{color.surface.l2-card}" },
+      "rowBgZebra": { "$value": "{color.surface.l3-raised}", "$description": "Even rows (NSM nth-child(even))." },
+      "rowBgHover": { "$value": "{color.surface.l3-hover}" },
+      "rowColor": { "$value": "{color.text.secondary}" },
+      "rowBorder": { "$value": "1px solid {color.border.default}" },
+      "cellPadding": { "$value": "{spacing.table-cell-padding}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "modal": {
+      "background": { "$value": "{color.surface.l1-chrome}" },
+      "radius": { "$value": "{border.radius.card}" },
+      "shadow": { "$value": "{shadow.overlay}" },
+      "overlayScrim": { "$value": "rgba(0,0,0,0.8)" },
+      "headerBorder": { "$value": "1px solid {color.border.default}" },
+      "headerColor": { "$value": "{color.text.primary}" },
+      "headerFontSize": { "$value": "{typography.fontSize.md}" },
+      "headerFontWeight": { "$value": "{typography.fontWeight.semibold}" },
+      "closeColor": { "$value": "{color.text.muted}" },
+      "bodyColor": { "$value": "{color.text.secondary}" },
+      "bodyLineHeight": { "$value": "{typography.lineHeight.loose}" },
+      "footerBorder": { "$value": "1px solid {color.border.default}" }
+    },
+    "titlePane": {
+      "$description": "Panel with a titled header and body.",
+      "background": { "$value": "{color.surface.l1-chrome}" },
+      "radius": { "$value": "{border.radius.card}" },
+      "headerBorder": { "$value": "1px solid {color.border.default}" },
+      "headerColor": { "$value": "{color.text.primary}" },
+      "headerFontSize": { "$value": "{typography.fontSize.base}" },
+      "headerFontWeight": { "$value": "{typography.fontWeight.semibold}" },
+      "bodyColor": { "$value": "{color.text.secondary}" }
+    },
+    "tooltip": {
+      "background": { "$value": "rgba(51,51,51,0.9)" },
+      "color": { "$value": "{color.text.primary}" },
+      "fontSize": { "$value": "{typography.fontSize.sm}" },
+      "radius": { "$value": "{border.radius.input}" },
+      "shadow": { "$value": "{shadow.tooltip}" }
+    },
+    "treeItem": {
+      "color": { "$value": "{color.text.secondary}" },
+      "colorHover": { "$value": "{color.text.primary}" },
+      "bgSelected": { "$value": "{color.surface.l3-raised}" },
+      "colorSelected": { "$value": "{color.text.primary}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "scrollbar": {
+      "trackBg": { "$value": "{color.surface.l1-chrome}" },
+      "thumbBg": { "$value": "{color.border.subtle}" }
+    },
+    "stepper": {
+      "$description": "Multi-step wizard. Adds a 'done' state (green) vs v1.2.",
+      "stepActiveBg": { "$value": "{color.accent.default}" },
+      "stepActiveColor": { "$value": "{color.text.on-accent}" },
+      "stepDoneBg": { "$value": "{color.semantic.mitigated}", "$description": "Completed step (NSM green check)." },
+      "stepDoneColor": { "$value": "{color.text.on-accent}" },
+      "stepInactiveBg": { "$value": "{color.surface.l3-hover}" },
+      "stepInactiveColor": { "$value": "{color.text.muted}" },
+      "stepBorder": { "$value": "{color.border.default}" },
+      "connectorColor": { "$value": "{color.border.default}" },
+      "labelColor": { "$value": "{color.text.muted}" },
+      "labelColorActive": { "$value": "{color.text.secondary}" },
+      "labelFontSize": { "$value": "{typography.fontSize.xs}" }
+    },
+    "buttonPrimary": {
+      "background": { "$value": "{color.accent.default}" },
+      "backgroundHover": { "$value": "{color.accent.hover}" },
+      "color": { "$value": "{color.text.on-accent}" },
+      "radius": { "$value": "{border.radius.input}", "$description": "NSM buttons are 3px, not pill." },
+      "height": { "$value": "{spacing.5}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    },
+    "buttonSecondary": {
+      "background": { "$value": "transparent" },
+      "backgroundHover": { "$value": "{color.surface.l3-hover}" },
+      "border": { "$value": "1px solid {color.border.default}" },
+      "color": { "$value": "{color.text.secondary}" },
+      "radius": { "$value": "{border.radius.input}" },
+      "height": { "$value": "{spacing.5}" },
+      "font": { "$value": "{typography.fontFamily.base}" },
+      "fontSize": { "$value": "{typography.fontSize.base}" }
+    }
+  }
+}
